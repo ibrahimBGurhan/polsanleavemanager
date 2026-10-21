@@ -1,6 +1,6 @@
 # Testing
 
-> **Template — filled during bootstrap.**
+> Bootstrap'ta belirlendi (2026-10-21). Aşağıdaki "Protected-tests rule"dan itibaren olan bölümler ANEW çekirdeğidir.
 
 ## The contract
 - Every acceptance criterion maps to at least one test (criterion ↔ test map lives in the plan).
@@ -8,10 +8,39 @@
 - The whole suite runs inside `scripts/check` — one command, everywhere.
 
 ## Frameworks & layout
-<!-- Test framework(s), where tests live, naming pattern. -->
+- xUnit (VSTest üzerinden `dotnet test`), sahte nesneler için NSubstitute.
+- Her modülün testi `tests/PolsanLeave.<Modül>.Tests`; mimari testleri `tests/PolsanLeave.ArchitectureTests`
+  (NetArchTest); UI akışları `tests/PolsanLeave.E2E` (Playwright for .NET).
+- Test adı: `Method_Condition_ExpectedResult` (`docs/conventions.md`).
+- Katmanlar ve check profilleri — **seçiciyle** ayrılır (Two speeds, kural 4):
+
+| Katman | Kapsam | Trait | Profil |
+|---|---|---|---|
+| Unit | BR-1…BR-10, iş günü hesabı, `Result` hataları | yok | `--fast` (`test-unit`) |
+| Architecture | FD-1…FD-6 | yok | `--fast` (`test-unit`) |
+| Integration | EF Core eşlemeleri, sorgular, modüller arası akış, gerçek SQL Server | `[Trait("Category","Integration")]` | full (`test-integration`) |
+| E2E | Kritik UI akışları: talep oluştur, onayla, reddet, iptal et | `[Trait("Category","E2E")]` | full (`test-e2e`) |
+
+  Fast filtresi `Category!=Integration&Category!=E2E`; full-only adımlar `Category=Integration` ve
+  `Category=E2E` — birleşimleri her testi kapsar. Yeni bir kategori eklemek check.conf'u da değiştirir.
+- **Integration veritabanı:** yerelde SQL Server LocalDB, adanmış örnek `PolsanLeaveTest`; CI'da
+  SQL Server servis konteyneri. Bağlantı `POLSANLEAVE_TEST_SQL` ortam değişkeninden, yoksa
+  `(localdb)\PolsanLeaveTest`. Her test çalıştırması benzersiz adlı bir veritabanı oluşturur ve sonunda
+  siler. EF InMemory / SQLite **kullanılmaz** (SQL Server'dan farklı davranır).
+- **E2E:** Playwright headless, tek worker. **App-under-test yaşam döngüsünün sahibi test
+  fixture'ıdır:** uygulama `WebApplicationFactory` ile süreç içinde gerçek bir Kestrel portunda başlar,
+  fixture dispose edilince kapanır — hata ve timeout dahil. Ayrı bir `dotnet run` süreci yoktur.
+- **E2E kimlik doğrulama:** Entra'ya gidilmez; yalnızca test projesinde bulunan sahte kimlik
+  doğrulama handler'ı kullanılır (FD-6).
+- Zaman: testler `FakeTimeProvider` kullanır (FD-5); kıdem ve yıldönümü testleri deterministiktir.
 
 ## What must be tested
-<!-- e.g. every business rule (BR-n), every boundary/forbidden dependency, critical flows E2E/smoke. -->
+- Her iş kuralı (BR-n) en az bir test; BR-1 için sınır değerleri (tam 1, 5, 15 yıl; 18 ve 50 yaş sınırları).
+- Her domain değişmezi (`docs/domain.md`), özellikle bakiye formülü ve denetim izi.
+- Her yasak bağımlılık (FD-n) bir mimari testi.
+- Her yetki kuralı için bir yetkisiz erişim testi (başka çalışanın talebi, yönetici olmayanın onayı, İK olmayanın düzeltmesi).
+- Kritik akışlar E2E ile.
+- Sayısal kapsam yüzdesi hedefi yoktur; sözleşme "her kabul kriterinin bir testi var"dır.
 
 ## Protected-tests rule
 Weakening asserts, deleting, or skipping tests to reach green is forbidden. A red test triggers

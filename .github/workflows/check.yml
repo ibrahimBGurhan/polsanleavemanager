@@ -17,10 +17,26 @@ jobs:
 
   check:
     runs-on: ubuntu-latest
+    # Integration tests: real SQL Server (LocalDB is Windows-only) — docs/testing.md, Frameworks & layout.
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: ${{ secrets.CI_MSSQL_SA_PASSWORD }}
+        ports:
+          - 1433:1433
+    env:
+      POLSANLEAVE_TEST_SQL: Server=localhost,1433;User Id=sa;Password=${{ secrets.CI_MSSQL_SA_PASSWORD }};TrustServerCertificate=True
+      DOTNET_NOLOGO: "1"
     steps:
       - uses: actions/checkout@v4
-      # The bootstrap workflow may add toolchain setup steps here (e.g. setup-java, setup-node)
-      # to match the commands it writes into scripts/check.conf.
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+        if: hashFiles('global.json') != ''
+      # Toolchain setup matching scripts/check.conf. The plan that adds E2E tests also adds the
+      # Playwright browser install step here.
       # --fast is for the inner loop only; CI always runs the full contract (docs/testing.md).
       - name: Verification contract
         run: |
