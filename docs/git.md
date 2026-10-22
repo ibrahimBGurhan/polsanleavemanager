@@ -26,5 +26,9 @@
 
 ## Pull requests
 - PR template checklist completed; `scripts/check` green in CI; squash-merge.
-- En az bir onaycı (reviewer) zorunlu; `main` için GitHub branch protection ile zorlanır.
+- En az bir onaycı (reviewer) zorunlu (ekip gelene kadar tek geliştirici kendi PR'ını birleştirir).
+- **Zorlama durumu (2026-10-22):** `main` için `main-protection` ruleset'i tanımlı (silme ve force push
+  yasak, PR zorunlu, yalnızca squash, `doctor` + `check` zorunlu), ama depo kişisel hesapta private olduğu
+  için GitHub Free'de **uygulanmıyor**. Bu kurallara şimdilik süreçle uyulur. Depo bir Polsan
+  organizasyonuna (Team) taşındığında ruleset zorlanır ve onay sayısı 1 yapılır.
 - Commit mesajları ve branch adları İngilizce (`docs/conventions.md`, Language).
