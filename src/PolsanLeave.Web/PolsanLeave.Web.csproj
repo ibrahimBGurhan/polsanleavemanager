@@ -12,4 +12,9 @@
     <ProjectReference Include="../PolsanLeave.Leave/PolsanLeave.Leave.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="PolsanLeave.Web.Tests" />
+    <InternalsVisibleTo Include="PolsanLeave.E2E" />
+  </ItemGroup>
+
 </Project>

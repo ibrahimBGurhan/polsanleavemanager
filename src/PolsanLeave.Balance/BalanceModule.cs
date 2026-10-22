@@ -6,13 +6,14 @@ using PolsanLeave.Balance.Internal.Data;
 
 namespace PolsanLeave.Balance;
 
-/// <summary>Composition entry point of the Balance module. Requires the Identity module (IEmployeeDirectory).</summary>
+/// <summary>Composition entry point of the Balance module. Requires the Identity module (IEmployeeDirectory) and an IBusinessClock.</summary>
 public static class BalanceModule
 {
     public static IServiceCollection AddBalanceModule(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<BalanceDbContext>(o => Configure(o, connectionString));
         services.AddScoped<IEntitlementService, EntitlementService>();
+        services.AddScoped<IBalanceSeedImporter, BalanceSeedImporter>();
         return services;
     }
 

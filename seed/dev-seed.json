@@ -1,0 +1,11 @@
+{
+  "openingDate": "2026-01-01",
+  "employees": [
+    { "employeeNumber": "1000", "fullName": "Selin Arslan", "userPrincipalName": "selin.arslan@ornek.polsan.test", "hireDate": "2010-04-01", "birthDate": "1970-03-15", "managerEmployeeNumber": null, "openingBalanceDays": 30 },
+    { "employeeNumber": "1001", "fullName": "Burak Koç", "userPrincipalName": "burak.koc@ornek.polsan.test", "hireDate": "2016-09-12", "birthDate": "1985-06-20", "managerEmployeeNumber": "1000", "openingBalanceDays": 18 },
+    { "employeeNumber": "1002", "fullName": "Ayşe Demir", "userPrincipalName": "ayse.demir@ornek.polsan.test", "hireDate": "2021-02-01", "birthDate": "1994-11-05", "managerEmployeeNumber": "1001", "openingBalanceDays": 9 },
+    { "employeeNumber": "1003", "fullName": "Can Öztürk", "userPrincipalName": "can.ozturk@ornek.polsan.test", "hireDate": "2024-02-29", "birthDate": "1999-01-10", "managerEmployeeNumber": "1001", "openingBalanceDays": 0 },
+    { "employeeNumber": "1004", "fullName": "Elif Şahin", "userPrincipalName": "elif.sahin@ornek.polsan.test", "hireDate": "2026-05-04", "birthDate": "2002-08-08", "managerEmployeeNumber": "1001", "openingBalanceDays": 0 },
+    { "employeeNumber": "1005", "fullName": "Hasan Yıldız", "userPrincipalName": "hasan.yildiz@ornek.polsan.test", "hireDate": "2012-01-16", "birthDate": "1975-12-01", "managerEmployeeNumber": "1000", "openingBalanceDays": 22 }
+  ]
+}

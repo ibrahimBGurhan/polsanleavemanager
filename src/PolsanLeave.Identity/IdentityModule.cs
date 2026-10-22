@@ -6,7 +6,7 @@ using PolsanLeave.Identity.Internal.Data;
 
 namespace PolsanLeave.Identity;
 
-/// <summary>Composition entry point of the Identity module. The host registers an <see cref="ISignedInUserAccessor"/>.</summary>
+/// <summary>Composition entry point of the Identity module. The host registers an <see cref="ISignedInUserAccessor"/> and an IBusinessClock.</summary>
 public static class IdentityModule
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, string connectionString)
@@ -14,6 +14,7 @@ public static class IdentityModule
         services.AddDbContext<IdentityDbContext>(o => Configure(o, connectionString));
         services.AddScoped<ICurrentEmployee, CurrentEmployee>();
         services.AddScoped<IEmployeeDirectory, EmployeeDirectory>();
+        services.AddScoped<IEmployeeImporter, EmployeeImporter>();
         return services;
     }
 
