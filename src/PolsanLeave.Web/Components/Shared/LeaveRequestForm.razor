@@ -77,6 +77,7 @@ else
     private string? _description;
     private string? _previewText;
     private string? _generalError;
+    private int _previewVersion;
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,6 +99,8 @@ else
 
     private async Task PreviewAsync()
     {
+        // Only the latest preview may update the text; an older, slower response is dropped (review 1, F-3).
+        var version = ++_previewVersion;
         _previewText = null;
         _fieldErrors.Remove(StartField);
         _fieldErrors.Remove(EndField);
@@ -107,6 +110,11 @@ else
         }
 
         var preview = await Leave.PreviewAsync(start, end);
+        if (version != _previewVersion)
+        {
+            return;
+        }
+
         _previewText = preview.IsSuccess
             ? L["Preview.Text", preview.Value.WorkingDays, preview.Value.AvailableAfter]
             : L.For(preview.Error);

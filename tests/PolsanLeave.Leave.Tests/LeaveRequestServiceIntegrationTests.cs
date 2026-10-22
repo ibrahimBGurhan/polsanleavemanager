@@ -147,6 +147,24 @@ public sealed class LeaveRequestServiceIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Preview_WeekendOnly_ReturnsNoWorkingDays()
+    {
+        // Saturday–Sunday: the preview shows the same verdict the submit would (AC-35; review 1, F-3).
+        var preview = await AsEmployee(_ayse).PreviewAsync(new DateOnly(2026, 11, 7), new DateOnly(2026, 11, 8), TestContext.Current.CancellationToken);
+
+        Assert.Equal(LeaveErrors.NoWorkingDays, preview.Error);
+    }
+
+    [Fact]
+    public async Task Preview_ExceedsAvailable_ReturnsInsufficientBalance()
+    {
+        // 15 working days against 10 available: no negative "available after" (AC-35; review 1, F-3).
+        var preview = await AsEmployee(_ayse).PreviewAsync(new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 20), TestContext.Current.CancellationToken);
+
+        Assert.Equal(LeaveErrors.InsufficientBalance, preview.Error);
+    }
+
+    [Fact]
     public async Task Preview_ReturnsDaysAndAvailableAfter()
     {
         var preview = await AsEmployee(_ayse).PreviewAsync(new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 4), TestContext.Current.CancellationToken);

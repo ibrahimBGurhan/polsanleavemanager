@@ -66,7 +66,18 @@ internal sealed class LeaveRequestService(
             return BindToEndDate(days.Error);
         }
 
+        // The same verdicts the submit would give, not "0 days" or a negative balance (AC-35; review 1, F-3).
+        if (days.Value == 0)
+        {
+            return LeaveErrors.NoWorkingDays;
+        }
+
         var summary = await SummarizeAsync(employee.Id, cancellationToken);
+        if (days.Value > summary.Available)
+        {
+            return LeaveErrors.InsufficientBalance;
+        }
+
         return new LeavePreview(days.Value, summary.Available - days.Value);
     }
 
