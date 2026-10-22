@@ -31,3 +31,7 @@ csharp_style_var_when_type_is_apparent = true:silent
 dotnet_diagnostic.CA1707.severity = none
 # xUnit test classes must be public
 dotnet_diagnostic.CA1515.severity = none
+
+[src/**.cs]
+# C#-only codebase: VB keyword clashes (e.g. the Error type, docs/conventions.md) are irrelevant
+dotnet_diagnostic.CA1716.severity = none
