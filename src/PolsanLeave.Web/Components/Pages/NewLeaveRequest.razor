@@ -27,7 +27,7 @@
             <div class="alert alert-warning" role="alert" data-testid="no-approver">@L["Leave.NoApprover"]</div>
         }
 
-        <form @onsubmit="SubmitAsync" novalidate data-testid="leave-form">
+        <form @onsubmit="SubmitAsync" novalidate data-testid="leave-form" data-ready="@(_interactive ? "true" : "false")">
             <p>@L["Form.LeaveType"]</p>
 
             <div class="mb-3">
@@ -79,6 +79,7 @@
     private bool _profileMissing;
     private bool _hasApprover = true;
     private bool _submitting;
+    private bool _interactive;
     private DateOnly? _startDate;
     private DateOnly? _endDate;
     private string? _description;
@@ -91,6 +92,16 @@
         _profileMissing = summary.Error == LeaveErrors.ProfileMissing;
         _hasApprover = summary.IsSuccess && summary.Value.HasApprover;
         _loading = false;
+    }
+
+    /// <summary>Set once the circuit is live; E2E waits for data-ready="true" before typing.</summary>
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _interactive = true;
+            StateHasChanged();
+        }
     }
 
     private async Task PreviewAsync()

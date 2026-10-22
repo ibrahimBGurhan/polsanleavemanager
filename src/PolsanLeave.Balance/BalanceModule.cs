@@ -11,7 +11,8 @@ public static class BalanceModule
 {
     public static IServiceCollection AddBalanceModule(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<BalanceDbContext>(o => Configure(o, connectionString));
+        // A factory, not a scoped context: a Blazor circuit is one long scope whose handlers interleave (plan 0001, D9).
+        services.AddDbContextFactory<BalanceDbContext>(o => Configure(o, connectionString));
         services.AddScoped<IEntitlementService, EntitlementService>();
         services.AddScoped<IBalanceSeedImporter, BalanceSeedImporter>();
         return services;
@@ -19,8 +20,8 @@ public static class BalanceModule
 
     public static async Task MigrateBalanceModuleAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
     {
-        await using var scope = services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<BalanceDbContext>().Database.MigrateAsync(cancellationToken);
+        await using var db = await services.GetRequiredService<IDbContextFactory<BalanceDbContext>>().CreateDbContextAsync(cancellationToken);
+        await db.Database.MigrateAsync(cancellationToken);
     }
 
     internal static void Configure(DbContextOptionsBuilder builder, string connectionString) =>

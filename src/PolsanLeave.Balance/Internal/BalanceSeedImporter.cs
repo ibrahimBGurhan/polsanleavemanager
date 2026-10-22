@@ -6,7 +6,7 @@ using PolsanLeave.SharedKernel;
 
 namespace PolsanLeave.Balance.Internal;
 
-internal sealed class BalanceSeedImporter(BalanceDbContext db, IBusinessClock clock) : IBalanceSeedImporter
+internal sealed class BalanceSeedImporter(IDbContextFactory<BalanceDbContext> contexts, IBusinessClock clock) : IBalanceSeedImporter
 {
     public async Task<BalanceSeedReport> ImportAsync(DateOnly openingDate, IReadOnlyList<OpeningBalanceSeed> openingBalances, CancellationToken cancellationToken = default)
     {
@@ -16,6 +16,7 @@ internal sealed class BalanceSeedImporter(BalanceDbContext db, IBusinessClock cl
             throw new InvalidOperationException("Invalid balance seed: opening balances cannot be negative (BR-4).");
         }
 
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
 
         var settings = await db.Settings.SingleOrDefaultAsync(cancellationToken);

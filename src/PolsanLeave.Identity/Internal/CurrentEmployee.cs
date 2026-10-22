@@ -5,27 +5,26 @@ using PolsanLeave.Identity.Internal.Domain;
 
 namespace PolsanLeave.Identity.Internal;
 
-/// <summary>Resolves the signed-in Entra user to an employee record, binding the <c>oid</c> on first sign-in.</summary>
-internal sealed class CurrentEmployee(ISignedInUserAccessor signedInUser, IdentityDbContext db) : ICurrentEmployee
+/// <summary>
+/// Resolves the signed-in Entra user to an employee record, binding the <c>oid</c> on first sign-in.
+/// Resolved once per scope; concurrent callers in the same scope (a Blazor circuit) share that one resolution.
+/// </summary>
+internal sealed class CurrentEmployee(ISignedInUserAccessor signedInUser, IDbContextFactory<IdentityDbContext> contexts) : ICurrentEmployee
 {
-    private EmployeeProfile? _resolved;
-    private bool _isResolved;
+    private Task<EmployeeProfile?>? _resolution;
 
-    public async Task<EmployeeProfile?> GetAsync(CancellationToken cancellationToken = default)
+    public Task<EmployeeProfile?> GetAsync(CancellationToken cancellationToken = default) =>
+        _resolution ??= ResolveAsync(cancellationToken);
+
+    private async Task<EmployeeProfile?> ResolveAsync(CancellationToken cancellationToken)
     {
-        if (_isResolved)
+        var user = await signedInUser.GetAsync(cancellationToken);
+        if (user is null)
         {
-            return _resolved;
+            return null;
         }
 
-        var user = await signedInUser.GetAsync(cancellationToken);
-        _resolved = user is null ? null : await ResolveAsync(user, cancellationToken);
-        _isResolved = true;
-        return _resolved;
-    }
-
-    private async Task<EmployeeProfile?> ResolveAsync(SignedInUser user, CancellationToken cancellationToken)
-    {
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var upn = Employee.NormalizeUpn(user.UserPrincipalName);
         var candidates = await db.Employees
             .Where(e => e.EntraObjectId == user.EntraObjectId || e.UserPrincipalName == upn)
@@ -47,10 +46,11 @@ internal sealed class CurrentEmployee(ISignedInUserAccessor signedInUser, Identi
     }
 }
 
-internal sealed class EmployeeDirectory(IdentityDbContext db) : IEmployeeDirectory
+internal sealed class EmployeeDirectory(IDbContextFactory<IdentityDbContext> contexts) : IEmployeeDirectory
 {
     public async Task<EmployeeProfile?> FindAsync(Guid employeeId, CancellationToken cancellationToken = default)
     {
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var employee = await db.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.Id == employeeId, cancellationToken);
         return employee?.ToProfile();
     }

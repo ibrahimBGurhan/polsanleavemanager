@@ -3,6 +3,7 @@
 - Status: In progress
 - Mode: lite
 - Plan: `specs/plans/0001-plan.md`
+- Revisions: 2026-10-22 — R-08: ana sayfanın "yükleniyor" durumu çıkarıldı (streaming olmadan AC-38 güvencesi; onay: İbrahim Gürhan)
 
 ## Intent
 Polsan çalışanları bugün yıllık izin taleplerini sistem dışında iletiyor; kalan izin günlerini bilmiyor
@@ -63,7 +64,7 @@ bakiyeleri ve resmî tatiller bu dilimde İK'nın sağladığı başlangıç ver
   3. "Gönder" → doğrulama başarılıysa başarı mesajı ve ana sayfaya dönüş; yeni talep listede `Beklemede`
      olarak en üstte. Başarısızsa form, girilen değerler korunarak hata mesajıyla kalır.
 - States:
-  - Ana sayfa: yükleniyor · bakiye + liste (dolu) · liste boş ("Henüz izin talebiniz yok") ·
+  - Ana sayfa: bakiye + liste (dolu) · liste boş ("Henüz izin talebiniz yok") ·
     profil tanımlı değil ("Profiliniz tanımlı değil, İK ile iletişime geçin"; talep butonu yok) ·
     beklenmeyen hata (genel mesaj + korelasyon ID).
   - Form: boş · önizleme · doğrulama hatası (R-6 nedeni) · gönderiliyor (buton pasif, çift gönderim yok) ·

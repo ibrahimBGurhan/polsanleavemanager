@@ -6,13 +6,14 @@ using PolsanLeave.SharedKernel;
 
 namespace PolsanLeave.Identity.Internal;
 
-internal sealed class EmployeeImporter(IdentityDbContext db, IBusinessClock clock) : IEmployeeImporter
+internal sealed class EmployeeImporter(IDbContextFactory<IdentityDbContext> contexts, IBusinessClock clock) : IEmployeeImporter
 {
     public async Task<IReadOnlyDictionary<string, Guid>> UpsertAsync(IReadOnlyList<EmployeeSeed> employees, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(employees);
         Validate(employees);
 
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
 
         var numbers = employees.Select(e => e.EmployeeNumber).ToList();

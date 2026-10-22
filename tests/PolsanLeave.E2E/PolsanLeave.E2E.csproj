@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../PolsanLeave.TestInfrastructure/PolsanLeave.TestInfrastructure.csproj" />
+    <PackageReference Include="Microsoft.Playwright.Xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- docs/testing.md: e2e runs single-worker -->
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

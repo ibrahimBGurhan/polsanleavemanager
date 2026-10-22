@@ -53,6 +53,7 @@ public class PolsanLeaveAppFactory : WebApplicationFactory<Program>
     {
         ArgumentNullException.ThrowIfNull(builder);
         builder.UseEnvironment("Testing");
+        builder.UseStaticWebAssets(); // blazor.web.js and other static web assets outside Development
         builder.UseSetting("ConnectionStrings:PolsanLeave", Database.ConnectionString);
         builder.UseSetting("AzureAd:TenantId", "00000000-0000-0000-0000-00000000aaaa");
         builder.UseSetting("AzureAd:ClientId", "00000000-0000-0000-0000-00000000bbbb");

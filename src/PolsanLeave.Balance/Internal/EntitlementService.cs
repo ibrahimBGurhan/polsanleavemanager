@@ -6,12 +6,13 @@ using PolsanLeave.Identity.Contracts;
 
 namespace PolsanLeave.Balance.Internal;
 
-internal sealed class EntitlementService(BalanceDbContext db, IEmployeeDirectory employees) : IEntitlementService
+internal sealed class EntitlementService(IDbContextFactory<BalanceDbContext> contexts, IEmployeeDirectory employees) : IEntitlementService
 {
     public async Task<Entitlement> GetAsync(Guid employeeId, DateOnly asOf, CancellationToken cancellationToken = default)
     {
         var employee = await employees.FindAsync(employeeId, cancellationToken)
             ?? throw new InvalidOperationException($"Employee {employeeId} does not exist.");
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var settings = await db.Settings.AsNoTracking().SingleOrDefaultAsync(cancellationToken)
             ?? throw new InvalidOperationException("Balance opening date is not configured; import the seed data first.");
 

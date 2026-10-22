@@ -11,15 +11,16 @@ public static class CalendarModule
 {
     public static IServiceCollection AddCalendarModule(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<CalendarDbContext>(o => Configure(o, connectionString));
+        // A factory, not a scoped context: a Blazor circuit is one long scope whose handlers interleave (plan 0001, D9).
+        services.AddDbContextFactory<CalendarDbContext>(o => Configure(o, connectionString));
         services.AddScoped<IWorkingDayService, WorkingDayService>();
         return services;
     }
 
     public static async Task MigrateCalendarModuleAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
     {
-        await using var scope = services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<CalendarDbContext>().Database.MigrateAsync(cancellationToken);
+        await using var db = await services.GetRequiredService<IDbContextFactory<CalendarDbContext>>().CreateDbContextAsync(cancellationToken);
+        await db.Database.MigrateAsync(cancellationToken);
     }
 
     internal static void Configure(DbContextOptionsBuilder builder, string connectionString) =>

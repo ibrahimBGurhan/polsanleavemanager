@@ -11,15 +11,16 @@ public static class LeaveModule
 {
     public static IServiceCollection AddLeaveModule(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<LeaveDbContext>(o => Configure(o, connectionString));
+        // A factory, not a scoped context: a Blazor circuit is one long scope whose handlers interleave (plan 0001, D9).
+        services.AddDbContextFactory<LeaveDbContext>(o => Configure(o, connectionString));
         services.AddScoped<ILeaveRequestService, LeaveRequestService>();
         return services;
     }
 
     public static async Task MigrateLeaveModuleAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
     {
-        await using var scope = services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<LeaveDbContext>().Database.MigrateAsync(cancellationToken);
+        await using var db = await services.GetRequiredService<IDbContextFactory<LeaveDbContext>>().CreateDbContextAsync(cancellationToken);
+        await db.Database.MigrateAsync(cancellationToken);
     }
 
     internal static void Configure(DbContextOptionsBuilder builder, string connectionString) =>

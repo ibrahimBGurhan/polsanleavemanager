@@ -11,7 +11,8 @@ public static class IdentityModule
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<IdentityDbContext>(o => Configure(o, connectionString));
+        // A factory, not a scoped context: a Blazor circuit is one long scope whose handlers interleave (plan 0001, D9).
+        services.AddDbContextFactory<IdentityDbContext>(o => Configure(o, connectionString));
         services.AddScoped<ICurrentEmployee, CurrentEmployee>();
         services.AddScoped<IEmployeeDirectory, EmployeeDirectory>();
         services.AddScoped<IEmployeeImporter, EmployeeImporter>();
@@ -20,8 +21,8 @@ public static class IdentityModule
 
     public static async Task MigrateIdentityModuleAsync(this IServiceProvider services, CancellationToken cancellationToken = default)
     {
-        await using var scope = services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.MigrateAsync(cancellationToken);
+        await using var db = await services.GetRequiredService<IDbContextFactory<IdentityDbContext>>().CreateDbContextAsync(cancellationToken);
+        await db.Database.MigrateAsync(cancellationToken);
     }
 
     internal static void Configure(DbContextOptionsBuilder builder, string connectionString) =>

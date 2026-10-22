@@ -10,7 +10,7 @@ using PolsanLeave.SharedKernel;
 namespace PolsanLeave.Leave.Internal;
 
 internal sealed class LeaveRequestService(
-    LeaveDbContext db,
+    IDbContextFactory<LeaveDbContext> contexts,
     ICurrentEmployee currentEmployee,
     IEntitlementService entitlements,
     IWorkingDayService workingDays,
@@ -38,6 +38,7 @@ internal sealed class LeaveRequestService(
             return LeaveErrors.ProfileMissing;
         }
 
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var requests = await db.LeaveRequests.AsNoTracking()
             .Where(r => r.EmployeeId == employee.Id)
             .OrderByDescending(r => r.CreatedAtUtc)
@@ -98,8 +99,9 @@ internal sealed class LeaveRequestService(
 
         // BR-4/BR-5 under concurrency (AC-41): serialize this employee's submissions; the lock is
         // released with the transaction.
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
-        await AcquireEmployeeLockAsync(employee.Id, cancellationToken);
+        await AcquireEmployeeLockAsync(db, employee.Id, cancellationToken);
 
         var existing = await db.LeaveRequests.Where(r => r.EmployeeId == employee.Id).ToListAsync(cancellationToken);
         var entitlement = await entitlements.GetAsync(employee.Id, today, cancellationToken);
@@ -120,12 +122,13 @@ internal sealed class LeaveRequestService(
 
     private async Task<BalanceSummary> SummarizeAsync(Guid employeeId, CancellationToken cancellationToken)
     {
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var requests = await db.LeaveRequests.AsNoTracking().Where(r => r.EmployeeId == employeeId).ToListAsync(cancellationToken);
         var entitlement = await entitlements.GetAsync(employeeId, clock.Today, cancellationToken);
         return BalanceSummaryCalculator.Calculate(entitlement, requests);
     }
 
-    private async Task AcquireEmployeeLockAsync(Guid employeeId, CancellationToken cancellationToken)
+    private static async Task AcquireEmployeeLockAsync(LeaveDbContext db, Guid employeeId, CancellationToken cancellationToken)
     {
         var resource = $"leave-employee-{employeeId:N}";
         await db.Database.ExecuteSqlInterpolatedAsync(

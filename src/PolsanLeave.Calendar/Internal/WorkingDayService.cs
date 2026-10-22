@@ -6,10 +6,11 @@ using PolsanLeave.SharedKernel;
 
 namespace PolsanLeave.Calendar.Internal;
 
-internal sealed class WorkingDayService(CalendarDbContext db) : IWorkingDayService
+internal sealed class WorkingDayService(IDbContextFactory<CalendarDbContext> contexts) : IWorkingDayService
 {
     public async Task<Result<int>> CountWorkingDaysAsync(DateOnly start, DateOnly end, CancellationToken cancellationToken = default)
     {
+        await using var db = await contexts.CreateDbContextAsync(cancellationToken);
         var years = await db.CalendarYears.AsNoTracking()
             .Where(y => y.Year >= start.Year && y.Year <= end.Year)
             .Select(y => y.Year)
