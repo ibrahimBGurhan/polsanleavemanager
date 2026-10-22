@@ -54,6 +54,8 @@ public sealed class HostIntegrationTests : IAsyncLifetime
 
         // The menu link is an <a> with class nav-link; attribute order is up to Blazor.
         const string NavLinkToForm = "<a(?=[^>]* href=\"izin/yeni\")(?=[^>]* class=\"[^\"]*nav-link)[^>]*>";
+        // The denied page does render the menu (its "İzinlerim" link), so the absence below is meaningful (review 2, N-2).
+        Assert.Matches("<a(?=[^>]* href=\"\")(?=[^>]* class=\"[^\"]*nav-link)[^>]*>", denied);
         Assert.DoesNotMatch(NavLinkToForm, denied);
         Assert.DoesNotContain("href=\"izin/yeni\"", denied, StringComparison.Ordinal);
         Assert.Matches(NavLinkToForm, employee);
