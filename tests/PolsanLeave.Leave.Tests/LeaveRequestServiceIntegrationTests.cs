@@ -128,7 +128,12 @@ public sealed class LeaveRequestServiceIntegrationTests : IAsyncLifetime
 
         var result = await SubmitAsAsync(_ayse, new SubmitLeaveRequest(new DateOnly(2027, 10, 18), new DateOnly(2028, 1, 3), null));
 
-        Assert.Equal(CalendarErrors.NotDefined, result.Error);
+        // Bound to the end date field so the form can show it there (AC-32, AC-39; review 1, F-2).
+        Assert.Equal(CalendarErrors.NotDefined.Code, result.Error?.Code);
+        Assert.Equal("EndDate", result.Error?.Field);
+
+        var preview = await AsEmployee(_ayse).PreviewAsync(new DateOnly(2027, 10, 18), new DateOnly(2028, 1, 3), TestContext.Current.CancellationToken);
+        Assert.Equal((CalendarErrors.NotDefined.Code, "EndDate"), (preview.Error?.Code, preview.Error?.Field));
     }
 
     [Fact]

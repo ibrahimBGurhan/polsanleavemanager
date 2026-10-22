@@ -63,7 +63,7 @@ internal sealed class LeaveRequestService(
         var days = await workingDays.CountWorkingDaysAsync(startDate, endDate, cancellationToken);
         if (!days.IsSuccess)
         {
-            return days.Error;
+            return BindToEndDate(days.Error);
         }
 
         var summary = await SummarizeAsync(employee.Id, cancellationToken);
@@ -94,7 +94,7 @@ internal sealed class LeaveRequestService(
         var days = await workingDays.CountWorkingDaysAsync(request.StartDate, request.EndDate, cancellationToken);
         if (!days.IsSuccess)
         {
-            return days.Error;
+            return BindToEndDate(days.Error);
         }
 
         // BR-4/BR-5 under concurrency (AC-41): serialize this employee's submissions; the lock is
@@ -139,6 +139,9 @@ internal sealed class LeaveRequestService(
             """,
             cancellationToken);
     }
+
+    /// <summary>A calendar error concerns the chosen range; show it at the end date (AC-32, AC-39; review 1, F-2).</summary>
+    private static Error BindToEndDate(Error error) => error with { Field = error.Field ?? "EndDate" };
 
     private static LeaveRequestItem ToItem(LeaveRequest r) =>
         new(r.Id, r.StartDate, r.EndDate, r.WorkingDays, r.Status, r.CreatedAtUtc);
