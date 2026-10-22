@@ -13,6 +13,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PolsanLeave.ArchitectureTests/PolsanLeave.ArchitectureTests.csproj" />
+    <Project Path="tests/PolsanLeave.Balance.Tests/PolsanLeave.Balance.Tests.csproj" />
     <Project Path="tests/PolsanLeave.Calendar.Tests/PolsanLeave.Calendar.Tests.csproj" />
     <Project Path="tests/PolsanLeave.Identity.Tests/PolsanLeave.Identity.Tests.csproj" />
     <Project Path="tests/PolsanLeave.SharedKernel.Tests/PolsanLeave.SharedKernel.Tests.csproj" />
