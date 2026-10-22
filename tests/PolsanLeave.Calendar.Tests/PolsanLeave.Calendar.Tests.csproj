@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/PolsanLeave.Calendar/PolsanLeave.Calendar.csproj" />
+    <ProjectReference Include="../PolsanLeave.TestInfrastructure/PolsanLeave.TestInfrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
