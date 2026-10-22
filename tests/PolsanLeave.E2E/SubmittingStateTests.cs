@@ -6,7 +6,10 @@ using static Microsoft.Playwright.Assertions;
 
 namespace PolsanLeave.E2E;
 
-/// <summary>The app with a request service whose submit waits until the test releases it.</summary>
+/// <summary>
+/// The app with a request service whose submit waits until the test releases it. Single use: the release
+/// cannot be re-armed and the call count spans the fixture, so a class using it holds one test.
+/// </summary>
 public sealed class HeldSubmitApp : E2EApp
 {
     private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
