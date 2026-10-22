@@ -75,11 +75,25 @@ public sealed class EntitlementServiceIntegrationTests : IAsyncLifetime
         Assert.Throws<ArgumentException>(() =>
             new BalanceAdjustment(Guid.CreateVersion7(), _employeeId, Opening, 2, AdjustmentKind.Manual, " ", Now));
 
-        await using var scope = _services.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<BalanceDbContext>();
-        var existing = db.Adjustments.Single(a => a.EmployeeId == _employeeId);
+        await using (var scope = _services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<BalanceDbContext>();
+            db.Adjustments.Remove(db.Adjustments.Single(a => a.EmployeeId == _employeeId));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => db.SaveChangesAsync(TestContext.Current.CancellationToken));
+        }
 
-        db.Adjustments.Remove(existing);
-        await Assert.ThrowsAsync<InvalidOperationException>(() => db.SaveChangesAsync(TestContext.Current.CancellationToken));
+        // Changing a recorded adjustment is refused too (verify 1, V-3).
+        await using (var scope = _services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<BalanceDbContext>();
+            db.Entry(db.Adjustments.Single(a => a.EmployeeId == _employeeId)).Property(a => a.Days).CurrentValue = 99;
+            await Assert.ThrowsAsync<InvalidOperationException>(() => db.SaveChangesAsync(TestContext.Current.CancellationToken));
+        }
+
+        await using (var scope = _services.CreateAsyncScope())
+        {
+            var stored = scope.ServiceProvider.GetRequiredService<BalanceDbContext>().Adjustments.Single(a => a.EmployeeId == _employeeId);
+            Assert.Equal(10, stored.Days);
+        }
     }
 }
