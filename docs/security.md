@@ -7,7 +7,11 @@
 - Agents never print secret values, even when debugging.
 - Geliştirme: `dotnet user-secrets`. Production: ortam değişkenleri veya Azure Key Vault.
 - Entra kimlik bilgisi: client secret yerine mümkünse sertifika veya managed identity.
-- Depoya yalnızca anahtar adlarını içeren `appsettings.Development.example.json` girer.
+- Sır içeren ayarlar için depoya yalnızca anahtar adlarını içeren bir `*.example.json` girer.
+- **İstisna:** sır içermeyen geliştirme ayarı (`appsettings.Development.json`: LocalDB + Integrated Security
+  bağlantı dizesi, log seviyeleri) depoda tutulur. Bu dosyaya parola, client secret, anahtar veya gerçek
+  sunucu adresi eklemek yasaktır; Entra tenant/client ID'leri de buraya değil user-secrets'a yazılır
+  (`docs/development.md`).
 
 ## Input & output
 - Tüm girdi sınırda doğrulanır: `DataAnnotations` (biçim) + domain doğrulaması (iş kuralı, `Result` hatası).
