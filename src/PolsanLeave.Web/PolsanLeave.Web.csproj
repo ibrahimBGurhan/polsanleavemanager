@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../PolsanLeave.SharedKernel/PolsanLeave.SharedKernel.csproj" />
+    <ProjectReference Include="../PolsanLeave.Calendar/PolsanLeave.Calendar.csproj" />
+    <ProjectReference Include="../PolsanLeave.Identity/PolsanLeave.Identity.csproj" />
+    <ProjectReference Include="../PolsanLeave.Balance/PolsanLeave.Balance.csproj" />
+    <ProjectReference Include="../PolsanLeave.Leave/PolsanLeave.Leave.csproj" />
+  </ItemGroup>
+
+</Project>

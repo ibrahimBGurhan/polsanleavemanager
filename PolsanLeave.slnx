@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PolsanLeave.Balance.Contracts/PolsanLeave.Balance.Contracts.csproj" />
+    <Project Path="src/PolsanLeave.Balance/PolsanLeave.Balance.csproj" />
+    <Project Path="src/PolsanLeave.Calendar.Contracts/PolsanLeave.Calendar.Contracts.csproj" />
+    <Project Path="src/PolsanLeave.Calendar/PolsanLeave.Calendar.csproj" />
+    <Project Path="src/PolsanLeave.Identity.Contracts/PolsanLeave.Identity.Contracts.csproj" />
+    <Project Path="src/PolsanLeave.Identity/PolsanLeave.Identity.csproj" />
+    <Project Path="src/PolsanLeave.Leave.Contracts/PolsanLeave.Leave.Contracts.csproj" />
+    <Project Path="src/PolsanLeave.Leave/PolsanLeave.Leave.csproj" />
+    <Project Path="src/PolsanLeave.SharedKernel/PolsanLeave.SharedKernel.csproj" />
+    <Project Path="src/PolsanLeave.Web/PolsanLeave.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PolsanLeave.ArchitectureTests/PolsanLeave.ArchitectureTests.csproj" />
+  </Folder>
+</Solution>

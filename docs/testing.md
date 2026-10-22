@@ -8,7 +8,10 @@
 - The whole suite runs inside `scripts/check` — one command, everywhere.
 
 ## Frameworks & layout
-- xUnit (VSTest üzerinden `dotnet test`), sahte nesneler için NSubstitute.
+- xUnit v3, `dotnet test` Microsoft.Testing.Platform ile (`global.json` → `test.runner`); filtreler
+  VSTest sözdizimiyle (`--filter "Category=…"`). Sahte nesneler için NSubstitute.
+- `dotnet test`'e `--disable-build-servers` verilmez: MTP bunu test uygulamasına iletir ve el sıkışma
+  bozulur (sıfır test). Check'teki sıfır-test koruması bu tür sessiz yeşili yakalar.
 - Her modülün testi `tests/PolsanLeave.<Modül>.Tests`; mimari testleri `tests/PolsanLeave.ArchitectureTests`
   (NetArchTest); UI akışları `tests/PolsanLeave.E2E` (Playwright for .NET).
 - Test adı: `Method_Condition_ExpectedResult` (`docs/conventions.md`).

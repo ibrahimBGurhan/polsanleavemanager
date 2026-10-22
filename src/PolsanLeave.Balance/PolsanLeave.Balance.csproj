@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../PolsanLeave.Balance.Contracts/PolsanLeave.Balance.Contracts.csproj" />
+    <ProjectReference Include="../PolsanLeave.Identity.Contracts/PolsanLeave.Identity.Contracts.csproj" />
+    <ProjectReference Include="../PolsanLeave.SharedKernel/PolsanLeave.SharedKernel.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+
+</Project>

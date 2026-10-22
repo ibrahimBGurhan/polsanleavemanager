@@ -14,3 +14,13 @@ Thumbs.db
 
 # Claude Code personal settings (shared settings.json IS committed after init)
 .claude/settings.local.json
+
+# .NET build output
+bin/
+obj/
+TestResults/
+*.user
+.vs/
+
+# Real seed data (personal data, KVKK) never enters the repo — only seed/dev-seed.json
+seed/*.local.json
