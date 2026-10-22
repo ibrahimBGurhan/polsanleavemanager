@@ -8,13 +8,29 @@ namespace PolsanLeave.Identity.Internal;
 /// <summary>
 /// Resolves the signed-in Entra user to an employee record, binding the <c>oid</c> on first sign-in.
 /// Resolved once per scope; concurrent callers in the same scope (a Blazor circuit) share that one resolution.
+/// Only a successful resolution is kept: a failed or cancelled one is retried by the next caller (review 1, F-6).
 /// </summary>
 internal sealed class CurrentEmployee(ISignedInUserAccessor signedInUser, IDbContextFactory<IdentityDbContext> contexts) : ICurrentEmployee
 {
     private Task<EmployeeProfile?>? _resolution;
 
-    public Task<EmployeeProfile?> GetAsync(CancellationToken cancellationToken = default) =>
-        _resolution ??= ResolveAsync(cancellationToken);
+    public async Task<EmployeeProfile?> GetAsync(CancellationToken cancellationToken = default)
+    {
+        var resolution = _resolution ??= ResolveAsync(cancellationToken);
+        try
+        {
+            return await resolution;
+        }
+        catch
+        {
+            if (ReferenceEquals(_resolution, resolution))
+            {
+                _resolution = null;
+            }
+
+            throw;
+        }
+    }
 
     private async Task<EmployeeProfile?> ResolveAsync(CancellationToken cancellationToken)
     {
