@@ -30,12 +30,24 @@
   SQL Server servis konteyneri. Bağlantı `POLSANLEAVE_TEST_SQL` ortam değişkeninden, yoksa
   `(localdb)\PolsanLeaveTest`. Her test çalıştırması benzersiz adlı bir veritabanı oluşturur ve sonunda
   siler. EF InMemory / SQLite **kullanılmaz** (SQL Server'dan farklı davranır).
-- **E2E:** Playwright headless, tek worker. **App-under-test yaşam döngüsünün sahibi test
-  fixture'ıdır:** uygulama `WebApplicationFactory` ile süreç içinde gerçek bir Kestrel portunda başlar,
-  fixture dispose edilince kapanır — hata ve timeout dahil. Ayrı bir `dotnet run` süreci yoktur.
-- **E2E kimlik doğrulama:** Entra'ya gidilmez; yalnızca test projesinde bulunan sahte kimlik
-  doğrulama handler'ı kullanılır (FD-6).
+- **E2E:** Playwright (Chromium) headless, tek worker (`tests/PolsanLeave.E2E/xunit.runner.json`).
+  **App-under-test yaşam döngüsünün sahibi test fixture'ıdır** (`E2EApp`): uygulama
+  `WebApplicationFactory.UseKestrel()` ile süreç içinde gerçek bir Kestrel portunda başlar, fixture
+  dispose edilince tarayıcıyla birlikte kapanır — hata ve timeout dahil. Ayrı bir `dotnet run` süreci yoktur.
+  Chromium bir kez kurulur (`docs/development.md`). Etkileşimli form `data-ready="true"` olunca yazılır.
+- **Host ve E2E ortak altyapı** (`tests/PolsanLeave.TestInfrastructure`): `PolsanLeaveAppFactory` —
+  "Testing" ortamı (production hata sayfası), kendi veritabanı + `seed/dev-seed.json`, sabit saat
+  (Perşembe 2026-10-22, 09:00 İstanbul), ağsız Entra (OIDC) yönlendirmesi.
+- **Test kimlik doğrulama:** Entra'ya gidilmez; `TestAuthHandler` kullanıcıyı `PolsanLeave.TestUser`
+  çerezinden okur (çerez, Blazor'un WebSocket devresinde de taşınır). Çerez yoksa gerçek OIDC
+  yönlendirmesi çalışır (AC-1). Yalnızca test projelerinde bulunur (FD-6).
+- Blazor HTML'i Türkçe karakterleri kodlar (ı → `&#x131;`); host testleri sayfayı `WebUtility.HtmlDecode`
+  ile okur.
 - Zaman: testler `FakeTimeProvider` kullanır (FD-5); kıdem ve yıldönümü testleri deterministiktir.
+- **Yarışları zorlamak:** eşzamanlılık testleri `RendezvousGate` ile yarışı deterministik kılar; her yeni
+  eşzamanlılık testi, korumayı (kilit vb.) kaldıran bir mutasyonla bir kez kırmızıya döndürülerek doğrulanır.
+- **Mutasyon denemesinde tuzak:** bir dosyayı `mv` ile geri yüklemek eski değiştirilme zamanını korur ve
+  MSBuild eski DLL'i kullanır — geri yükledikten sonra `touch` edin.
 
 ## What must be tested
 - Her iş kuralı (BR-n) en az bir test; BR-1 için sınır değerleri (tam 1, 5, 15 yıl; 18 ve 50 yaş sınırları).
