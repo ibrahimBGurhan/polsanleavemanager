@@ -60,7 +60,9 @@ internal sealed class ClaimsSignedInUserAccessor(AuthenticationStateProvider aut
         }
 
         var objectId = user.FindFirstValue(ObjectIdClaim) ?? user.FindFirstValue("oid");
-        var upn = user.FindFirstValue("preferred_username") ?? user.FindFirstValue(ClaimTypes.Upn);
+        // Entra's upn optional claim first: preferred_username is mutable and not meant for authorization
+        // decisions (review 1, F-4; docs/security.md). It only matters for the first, oid-binding sign-in.
+        var upn = user.FindFirstValue("upn") ?? user.FindFirstValue(ClaimTypes.Upn) ?? user.FindFirstValue("preferred_username");
         return objectId is null || upn is null ? null : new SignedInUser(objectId, upn);
     }
 }

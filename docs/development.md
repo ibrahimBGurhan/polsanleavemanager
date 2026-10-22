@@ -29,8 +29,11 @@ ve adım sonunda durdurur. Geliştirme veritabanınıza (`MSSQLLocalDB`) dokunma
 3. **App roles** → iki rol oluşturun (Allowed member types: Users/Groups):
    - `Employee` (değer `Employee`) — uygulamayı kullanabilir
    - `HrAdmin` (değer `HrAdmin`) — İK işlemleri (sonraki spec'ler)
-4. **Enterprise applications** → bu uygulama → **Users and groups**: kendinize `Employee` rolünü atayın.
-5. Client secret **gerekmez** (yalnızca oturum açma; API çağrısı yok).
+4. **Token configuration** → **Add optional claim** → ID token → `upn` (çalışan eşleştirmesi bunu kullanır;
+   `docs/security.md`).
+5. **Enterprise applications** → bu uygulama → **Users and groups**: kendinize `Employee` rolünü atayın.
+   `Employee` rolü yalnızca kurum içi (Member) kullanıcılara atanır, misafir hesaplara atanmaz.
+6. Client secret **gerekmez** (yalnızca oturum açma; API çağrısı yok).
 
 ### 2. Gizli olmayan ayarlar (user-secrets)
 Tenant ve client ID gizli değildir ama ortama özgüdür; depoya yazılmaz:

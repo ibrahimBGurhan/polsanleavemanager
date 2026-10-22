@@ -29,6 +29,11 @@
 - **Yetkilendirme servis katmanında** (modül `Contracts` servisleri) uygulanır, UI'da değil (IDOR önlemi).
   UI'daki gizleme yalnızca kullanım kolaylığıdır.
 - Yönetici yalnızca doğrudan raporlarının taleplerini görür ve karara bağlar (BR-6); bakiye düzeltmesi yalnızca `HrAdmin` (BR-8).
+- **Çalışan eşleştirme:** giriş kalıcı olarak Entra `oid` ile tanınır. `oid` ilk girişte UPN ile bağlanır; UPN için
+  Entra'nın `upn` optional claim'i kullanılır (`preferred_username` değişebilir ve yetkilendirme için
+  önerilmez; yalnızca yedek). Başka bir hesaba bağlı kayıt UPN ile ele geçirilemez.
+- **Varsayım:** `Employee` rolü yalnızca kurum içi **Member** kullanıcılara atanır; misafir (B2B) hesaplara
+  atanmaz. Bu varsayım değişirse ilk bağlama kuralı yeniden değerlendirilir (review 1, F-4).
 - Sahte test kimlik doğrulaması production derlemesine girmez (FD-6).
 
 ## Dependencies

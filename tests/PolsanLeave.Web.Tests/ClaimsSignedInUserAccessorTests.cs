@@ -25,6 +25,18 @@ public class ClaimsSignedInUserAccessorTests
     }
 
     [Fact]
+    public async Task Get_UpnClaimPresent_PrefersItOverPreferredUsername()
+    {
+        // preferred_username is mutable and not for authorization; Entra's upn optional claim wins (review 1, F-4).
+        var principal = PolsanLeaveAppFactory.Ayse.ToPrincipal();
+        ((ClaimsIdentity)principal.Identity!).AddClaim(new Claim("upn", "ayse.demir.upn@ornek.polsan.test"));
+
+        var user = await Resolve(principal);
+
+        Assert.Equal("ayse.demir.upn@ornek.polsan.test", user?.UserPrincipalName);
+    }
+
+    [Fact]
     public async Task Get_WithoutEmployeeRole_ReturnsNull() =>
         Assert.Null(await Resolve(PolsanLeaveAppFactory.WithoutRole.ToPrincipal()));
 
