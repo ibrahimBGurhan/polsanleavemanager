@@ -10,9 +10,9 @@ namespace PolsanLeave.E2E;
 /// Owns the app-under-test lifecycle (docs/testing.md): the real host on a free Kestrel port and one
 /// headless Chromium, started for the test class and stopped on dispose — success, failure or timeout.
 /// </summary>
-public sealed class E2EApp : IAsyncLifetime
+public class E2EApp : IAsyncLifetime
 {
-    private readonly PolsanLeaveAppFactory _factory = new();
+    private PolsanLeaveAppFactory _factory = null!;
     private IPlaywright? _playwright;
 
     public IBrowser Browser { get; private set; } = null!;
@@ -21,8 +21,12 @@ public sealed class E2EApp : IAsyncLifetime
 
     public PolsanLeaveAppFactory Factory => _factory;
 
+    /// <summary>Service overrides for a fixture variant (e.g. a failing service), applied after the defaults.</summary>
+    protected virtual Action<IServiceCollection>? OverrideServices => null;
+
     public async ValueTask InitializeAsync()
     {
+        _factory = new PolsanLeaveAppFactory { OverrideServices = OverrideServices };
         _factory.UseKestrel(0);
         _factory.StartServer();
         await _factory.InitializeDatabaseAsync();
@@ -35,6 +39,7 @@ public sealed class E2EApp : IAsyncLifetime
 
     public async ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
         if (Browser is not null)
         {
             await Browser.CloseAsync();
