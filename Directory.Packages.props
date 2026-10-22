@@ -13,5 +13,6 @@
     <PackageVersion Include="Microsoft.Playwright.Xunit.v3" Version="1.64.0" />
     <!-- Transitive security pins (NuGetAudit) — remove once the direct package ships a fixed version -->
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+    <PackageVersion Include="System.Security.Cryptography.Xml" Version="10.0.13" />
   </ItemGroup>
 </Project>

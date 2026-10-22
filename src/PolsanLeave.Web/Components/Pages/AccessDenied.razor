@@ -1,0 +1,10 @@
+@page "/erisim-yok"
+
+<PageTitle>@L["AccessDenied.Heading"] - @L["App.Title"]</PageTitle>
+
+<AccessDeniedContent />
+
+@code {
+    [Inject]
+    private IStringLocalizer<Messages> L { get; set; } = default!;
+}

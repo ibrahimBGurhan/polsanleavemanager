@@ -26,7 +26,8 @@ internal sealed class LeaveRequestService(
             return LeaveErrors.ProfileMissing;
         }
 
-        return await SummarizeAsync(employee.Id, cancellationToken);
+        var summary = await SummarizeAsync(employee.Id, cancellationToken);
+        return summary with { HasApprover = employee.ManagerId is not null };
     }
 
     public async Task<Result<IReadOnlyList<LeaveRequestItem>>> GetMineAsync(CancellationToken cancellationToken = default)

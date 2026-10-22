@@ -1,0 +1,13 @@
+@* A field's validation message, linked from the input's aria-describedby (AC-32, AC-39). *@
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div id="@Id" class="invalid-feedback d-block" role="alert">@Message</div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter]
+    public string? Message { get; set; }
+}

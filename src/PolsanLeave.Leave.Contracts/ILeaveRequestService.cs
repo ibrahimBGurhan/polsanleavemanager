@@ -33,7 +33,8 @@ public sealed record LeaveRequestItem(
 
 public sealed record LeavePreview(int WorkingDays, int AvailableAfter);
 
-public sealed record BalanceSummary(int Remaining, int Pending, int Available, IReadOnlyList<BalanceMovement> Movements);
+/// <param name="HasApprover">False when the employee has no direct manager: requests cannot be submitted (AC-30).</param>
+public sealed record BalanceSummary(int Remaining, int Pending, int Available, IReadOnlyList<BalanceMovement> Movements, bool HasApprover = true);
 
 /// <summary>One credit or debit and what caused it (docs/domain.md: the balance never changes silently).</summary>
 public sealed record BalanceMovement(DateOnly Date, int Days, BalanceMovementSource Source, string Reference);

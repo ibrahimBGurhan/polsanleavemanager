@@ -116,6 +116,8 @@ public sealed class LeaveRequestServiceIntegrationTests : IAsyncLifetime
         var result = await SubmitAsAsync(_ayse with { ManagerId = null }, new SubmitLeaveRequest(new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 2), null));
 
         Assert.Equal(LeaveErrors.NoApprover, result.Error);
+        Assert.False((await AsEmployee(_ayse with { ManagerId = null }).GetSummaryAsync(TestContext.Current.CancellationToken)).Value.HasApprover);
+        Assert.True((await AsEmployee(_ayse).GetSummaryAsync(TestContext.Current.CancellationToken)).Value.HasApprover);
     }
 
     [Fact]

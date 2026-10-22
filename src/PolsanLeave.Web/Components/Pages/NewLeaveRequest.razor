@@ -1,0 +1,166 @@
+@page "/izin/yeni"
+@attribute [Authorize(Policy = Policies.Employee)]
+@rendermode InteractiveServer
+@inject ILeaveRequestService Leave
+@inject NavigationManager Navigation
+@inject IStringLocalizer<Messages> L
+
+@* Spec 0001: the request form with preview (R-5, R-6, R-8). Every rule is enforced by the service;
+   the form only shows its verdicts next to the field they belong to. *@
+<PageTitle>@L["Form.Heading"] - @L["App.Title"]</PageTitle>
+
+<h1>@L["Form.Heading"]</h1>
+
+<CorrelatedErrorBoundary>
+    @if (_loading)
+    {
+        <p role="status">@L["Common.Loading"]</p>
+    }
+    else if (_profileMissing)
+    {
+        <div class="alert alert-warning" role="alert" data-testid="profile-missing">@L["Leave.ProfileMissing"]</div>
+    }
+    else
+    {
+        @if (!_hasApprover)
+        {
+            <div class="alert alert-warning" role="alert" data-testid="no-approver">@L["Leave.NoApprover"]</div>
+        }
+
+        <form @onsubmit="SubmitAsync" novalidate data-testid="leave-form">
+            <p>@L["Form.LeaveType"]</p>
+
+            <div class="mb-3">
+                <label for="startDate" class="form-label">@L["Form.StartDate"]</label>
+                <input id="startDate" type="date" class="form-control @Invalid(StartField)"
+                       @bind="_startDate" @bind:after="PreviewAsync"
+                       aria-invalid="@AriaInvalid(StartField)" aria-describedby="@DescribedBy(StartField)" required />
+                <FieldError Id="startDate-error" Message="@_fieldErrors.GetValueOrDefault(StartField)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="endDate" class="form-label">@L["Form.EndDate"]</label>
+                <input id="endDate" type="date" class="form-control @Invalid(EndField)"
+                       @bind="_endDate" @bind:after="PreviewAsync"
+                       aria-invalid="@AriaInvalid(EndField)" aria-describedby="@DescribedBy(EndField)" required />
+                <FieldError Id="endDate-error" Message="@_fieldErrors.GetValueOrDefault(EndField)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">@L["Form.Description"]</label>
+                <textarea id="description" class="form-control @Invalid(DescriptionField)" rows="3"
+                          @bind="_description"
+                          aria-invalid="@AriaInvalid(DescriptionField)" aria-describedby="@DescribedBy(DescriptionField)"></textarea>
+                <FieldError Id="description-error" Message="@_fieldErrors.GetValueOrDefault(DescriptionField)" />
+            </div>
+
+            <p id="preview" role="status" aria-live="polite" data-testid="preview">@_previewText</p>
+
+            @if (_generalError is not null)
+            {
+                <div class="alert alert-danger" role="alert" data-testid="form-error">@_generalError</div>
+            }
+
+            <button type="submit" class="btn btn-primary" disabled="@(_submitting || !_hasApprover)" data-testid="submit">
+                @(_submitting ? L["Form.Submitting"] : L["Form.Submit"])
+            </button>
+            <a class="btn btn-link" href="">@L["Form.Back"]</a>
+        </form>
+    }
+</CorrelatedErrorBoundary>
+
+@code {
+    private const string StartField = "StartDate";
+    private const string EndField = "EndDate";
+    private const string DescriptionField = "Description";
+
+    private readonly Dictionary<string, string> _fieldErrors = [];
+    private bool _loading = true;
+    private bool _profileMissing;
+    private bool _hasApprover = true;
+    private bool _submitting;
+    private DateOnly? _startDate;
+    private DateOnly? _endDate;
+    private string? _description;
+    private string? _previewText;
+    private string? _generalError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var summary = await Leave.GetSummaryAsync();
+        _profileMissing = summary.Error == LeaveErrors.ProfileMissing;
+        _hasApprover = summary.IsSuccess && summary.Value.HasApprover;
+        _loading = false;
+    }
+
+    private async Task PreviewAsync()
+    {
+        _previewText = null;
+        _fieldErrors.Remove(StartField);
+        _fieldErrors.Remove(EndField);
+        if (_startDate is not { } start || _endDate is not { } end)
+        {
+            return;
+        }
+
+        var preview = await Leave.PreviewAsync(start, end);
+        _previewText = preview.IsSuccess
+            ? L["Preview.Text", preview.Value.WorkingDays, preview.Value.AvailableAfter]
+            : L.For(preview.Error);
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_submitting)
+        {
+            return;
+        }
+
+        _fieldErrors.Clear();
+        _generalError = null;
+        if (_startDate is not { } start || _endDate is not { } end)
+        {
+            if (_startDate is null)
+            {
+                _fieldErrors[StartField] = L["Form.Required"];
+            }
+
+            if (_endDate is null)
+            {
+                _fieldErrors[EndField] = L["Form.Required"];
+            }
+
+            return;
+        }
+
+        _submitting = true;
+        try
+        {
+            var result = await Leave.SubmitAsync(new SubmitLeaveRequest(start, end, _description));
+            if (result.IsSuccess)
+            {
+                Navigation.NavigateTo("/?olusturuldu=true", forceLoad: true);
+                return;
+            }
+
+            if (result.Error.Field is { } field)
+            {
+                _fieldErrors[field] = L.For(result.Error);
+            }
+            else
+            {
+                _generalError = L.For(result.Error);
+            }
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+
+    private string? Invalid(string field) => _fieldErrors.ContainsKey(field) ? "is-invalid" : null;
+
+    private string AriaInvalid(string field) => _fieldErrors.ContainsKey(field) ? "true" : "false";
+
+    private string? DescribedBy(string field) => _fieldErrors.ContainsKey(field) ? char.ToLowerInvariant(field[0]) + field[1..] + "-error" : null;
+}

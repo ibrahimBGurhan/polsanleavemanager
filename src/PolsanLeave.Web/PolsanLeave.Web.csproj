@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Web" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" />
     <ProjectReference Include="../PolsanLeave.SharedKernel/PolsanLeave.SharedKernel.csproj" />
     <ProjectReference Include="../PolsanLeave.Calendar/PolsanLeave.Calendar.csproj" />
     <ProjectReference Include="../PolsanLeave.Identity/PolsanLeave.Identity.csproj" />
@@ -14,6 +16,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="PolsanLeave.Web.Tests" />
+    <InternalsVisibleTo Include="PolsanLeave.TestInfrastructure" />
     <InternalsVisibleTo Include="PolsanLeave.E2E" />
   </ItemGroup>
 

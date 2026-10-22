@@ -1,7 +1,93 @@
 ﻿@page "/"
+@attribute [Authorize(Policy = Policies.Employee)]
+@inject ILeaveRequestService Leave
+@inject IStringLocalizer<Messages> L
 
-<PageTitle>Home</PageTitle>
+@* Spec 0001: balance summary (R-3) and "Taleplerim" (R-7). Static SSR without streaming, so an
+   unexpected error still reaches the generic error page (AC-38). *@
+<PageTitle>@L["Home.Heading"] - @L["App.Title"]</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>@L["Home.Heading"]</h1>
 
-Welcome to your new app.
+@if (Created == true)
+{
+    <div class="alert alert-success" role="status" data-testid="created">@L["Home.Created"]</div>
+}
+
+@if (_profileMissing)
+{
+    <div class="alert alert-warning" role="alert" data-testid="profile-missing">@L["Leave.ProfileMissing"]</div>
+}
+else if (_summary is not null)
+{
+    <section aria-labelledby="balance-heading" class="mb-4">
+        <h2 id="balance-heading" class="h4">@L["Home.BalanceHeading"]</h2>
+        <dl class="row mb-0" data-testid="balance">
+            <dt class="col-sm-3">@L["Balance.Remaining"]</dt>
+            <dd class="col-sm-9" data-testid="balance-remaining">@L["Balance.Days", _summary.Remaining]</dd>
+            <dt class="col-sm-3">@L["Balance.Pending"]</dt>
+            <dd class="col-sm-9" data-testid="balance-pending">@L["Balance.Days", _summary.Pending]</dd>
+            <dt class="col-sm-3">@L["Balance.Available"]</dt>
+            <dd class="col-sm-9" data-testid="balance-available">@L["Balance.Days", _summary.Available]</dd>
+        </dl>
+    </section>
+
+    <a class="btn btn-primary mb-4" href="izin/yeni" data-testid="new-request">@L["Nav.NewRequest"]</a>
+
+    <section aria-labelledby="requests-heading">
+        <h2 id="requests-heading" class="h4">@L["Home.MyRequests"]</h2>
+        @if (_requests.Count == 0)
+        {
+            <p data-testid="requests-empty">@L["Home.Empty"]</p>
+        }
+        else
+        {
+            <table class="table" data-testid="requests">
+                <thead>
+                    <tr>
+                        <th scope="col">@L["Table.Start"]</th>
+                        <th scope="col">@L["Table.End"]</th>
+                        <th scope="col">@L["Table.WorkingDays"]</th>
+                        <th scope="col">@L["Table.Status"]</th>
+                        <th scope="col">@L["Table.CreatedAt"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in _requests)
+                    {
+                        <tr data-testid="request-row">
+                            <td>@Texts.Date(request.StartDate)</td>
+                            <td>@Texts.Date(request.EndDate)</td>
+                            <td>@request.WorkingDays</td>
+                            <td data-testid="request-status">@L.For(request.Status)</td>
+                            <td>@Texts.LocalDateTime(request.CreatedAtUtc)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </section>
+}
+
+@code {
+    private bool _profileMissing;
+    private BalanceSummary? _summary;
+    private IReadOnlyList<LeaveRequestItem> _requests = [];
+
+    [SupplyParameterFromQuery(Name = "olusturuldu")]
+    private bool? Created { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var summary = await Leave.GetSummaryAsync();
+        if (summary.Error == LeaveErrors.ProfileMissing)
+        {
+            _profileMissing = true;
+        }
+        else
+        {
+            _summary = summary.Value;
+            _requests = (await Leave.GetMineAsync()).Value;
+        }
+    }
+}

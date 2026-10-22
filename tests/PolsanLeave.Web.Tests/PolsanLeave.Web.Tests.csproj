@@ -3,12 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/PolsanLeave.Web/PolsanLeave.Web.csproj" />
     <ProjectReference Include="../PolsanLeave.TestInfrastructure/PolsanLeave.TestInfrastructure.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="NSubstitute" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="../../seed/dev-seed.json" Link="seed/dev-seed.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
