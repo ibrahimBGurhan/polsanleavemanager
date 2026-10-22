@@ -18,6 +18,7 @@ internal sealed class EmployeeImporter(IDbContextFactory<IdentityDbContext> cont
 
         var numbers = employees.Select(e => e.EmployeeNumber).ToList();
         var existing = await db.Employees.Where(e => numbers.Contains(e.EmployeeNumber)).ToDictionaryAsync(e => e.EmployeeNumber, cancellationToken);
+        await EnsureUpnsAreFreeAsync(db, employees, cancellationToken);
 
         foreach (var seed in employees)
         {
@@ -44,6 +45,30 @@ internal sealed class EmployeeImporter(IDbContextFactory<IdentityDbContext> cont
         await transaction.CommitAsync(cancellationToken);
 
         return existing.ToDictionary(p => p.Key, p => p.Value.Id);
+    }
+
+    /// <summary>
+    /// A UPN stored for another employee number (a reused address, or two employees swapping addresses)
+    /// would break the unique index; refuse it with a message the operator can act on (review 1, F-7).
+    /// </summary>
+    private static async Task EnsureUpnsAreFreeAsync(IdentityDbContext db, IReadOnlyList<EmployeeSeed> employees, CancellationToken cancellationToken)
+    {
+        var numberByUpn = employees.ToDictionary(e => Employee.NormalizeUpn(e.UserPrincipalName), e => e.EmployeeNumber);
+        var upns = numberByUpn.Keys.ToList();
+        var holders = await db.Employees.AsNoTracking()
+            .Where(e => upns.Contains(e.UserPrincipalName))
+            .Select(e => new { e.UserPrincipalName, e.EmployeeNumber })
+            .ToListAsync(cancellationToken);
+
+        var conflicts = holders
+            .Where(h => numberByUpn[h.UserPrincipalName] != h.EmployeeNumber)
+            .Select(h => $"UPN {h.UserPrincipalName} belongs to stored employee {h.EmployeeNumber}, not {numberByUpn[h.UserPrincipalName]}")
+            .ToList();
+        if (conflicts.Count > 0)
+        {
+            throw new InvalidOperationException(
+                "Invalid employee seed: " + string.Join("; ", conflicts) + ". Free the UPN first (change the holder's UPN in a separate import).");
+        }
     }
 
     private static void Validate(IReadOnlyList<EmployeeSeed> employees)
