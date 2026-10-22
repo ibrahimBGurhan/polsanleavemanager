@@ -21,7 +21,8 @@
 ## Business rules
 - **BR-1:** Yıllık izin hakkı kıdeme göre: 1 yıl ile 5 yıl arası (5 dahil) 14 gün; 5 yıldan fazla,
   15 yıldan az 20 gün; 15 yıl ve üstü 26 gün. 18 yaş ve altı veya 50 yaş ve üstü çalışanlara
-  en az 20 gün verilir; yaş, hak edişin eklendiği gün (işe giriş yıldönümü) hesaplanır.
+  en az 20 gün verilir; yaş, hak edişin eklendiği gün (işe giriş yıldönümü) hesaplanır. 29 Şubat
+  doğumlular için yaş, artık olmayan yıllarda 28 Şubat'ta tamamlanır (işe giriş yıldönümüyle aynı kural).
   (4857 sayılı İş Kanunu md. 53)
 - **BR-2:** Hak, işe giriş yıldönümünde eklenir; ilk yıl dolmadan yıllık izin hakkı yoktur.
 - **BR-3:** İzin süresi iş günü olarak hesaplanır; Cumartesi, Pazar ve resmî tatiller düşülür.
