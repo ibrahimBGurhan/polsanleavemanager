@@ -52,8 +52,11 @@ public sealed class HostIntegrationTests : IAsyncLifetime
         var denied = await PageAsync(Client(PolsanLeaveAppFactory.WithoutRole), "/erisim-yok");
         var employee = await PageAsync(Client(PolsanLeaveAppFactory.Hasan), "/");
 
+        // The menu link is an <a> with class nav-link; attribute order is up to Blazor.
+        const string NavLinkToForm = "<a(?=[^>]* href=\"izin/yeni\")(?=[^>]* class=\"[^\"]*nav-link)[^>]*>";
+        Assert.DoesNotMatch(NavLinkToForm, denied);
         Assert.DoesNotContain("href=\"izin/yeni\"", denied, StringComparison.Ordinal);
-        Assert.Contains("class=\"nav-link\" href=\"izin/yeni\"", employee, StringComparison.Ordinal);
+        Assert.Matches(NavLinkToForm, employee);
     }
 
     [Fact]
