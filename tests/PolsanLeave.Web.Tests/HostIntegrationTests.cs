@@ -46,6 +46,17 @@ public sealed class HostIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task NavMenu_NewRequestLink_OnlyForEmployeeRole()
+    {
+        // review 1, F-9: users who cannot request leave are not offered the form.
+        var denied = await PageAsync(Client(PolsanLeaveAppFactory.WithoutRole), "/erisim-yok");
+        var employee = await PageAsync(Client(PolsanLeaveAppFactory.Hasan), "/");
+
+        Assert.DoesNotContain("href=\"izin/yeni\"", denied, StringComparison.Ordinal);
+        Assert.Contains("class=\"nav-link\" href=\"izin/yeni\"", employee, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Employee_Home_ShowsLegalBalanceAndEmptyList()
     {
         // Ayşe Demir: opening 9 + 5th anniversary on 2026-02-01 (age 31) → 14; no requests.
