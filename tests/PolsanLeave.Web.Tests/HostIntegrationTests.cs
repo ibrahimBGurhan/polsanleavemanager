@@ -89,7 +89,8 @@ public sealed class HostIntegrationTests : IAsyncLifetime
         NSubstitute.SubstituteExtensions.Returns(
             failing.GetSummaryAsync(NSubstitute.Arg.Any<CancellationToken>()),
             _ => Task.FromException<PolsanLeave.SharedKernel.Result<BalanceSummary>>(new InvalidOperationException("boom-secret-detail")));
-        await using var app = new PolsanLeaveAppFactory { OverrideServices = s => s.AddScoped(_ => failing) };
+        var logs = new CapturingLoggerProvider();
+        await using var app = new PolsanLeaveAppFactory { OverrideServices = s => s.AddScoped(_ => failing).AddSingleton<Microsoft.Extensions.Logging.ILoggerProvider>(logs) };
         await app.InitializeDatabaseAsync(TestContext.Current.CancellationToken);
         var client = app.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         client.DefaultRequestHeaders.Add("Cookie", $"{TestAuthHandler.CookieName}={PolsanLeaveAppFactory.Ayse.ToCookieValue()}");
@@ -103,6 +104,10 @@ public sealed class HostIntegrationTests : IAsyncLifetime
         Assert.DoesNotContain("boom-secret-detail", page, StringComparison.Ordinal);
         Assert.DoesNotContain("InvalidOperationException", page, StringComparison.Ordinal);
         Assert.DoesNotContain("   at ", page, StringComparison.Ordinal);
+
+        // Support finds the id the user reports in a log line, together with the exception (review 1, F-8).
+        var correlationId = System.Text.RegularExpressions.Regex.Match(page, "data-testid=\"correlation-id\">([0-9a-f]{32})<").Groups[1].Value;
+        Assert.Contains(logs.Entries, e => e.Message.Contains(correlationId, StringComparison.Ordinal) && e.Exception?.Message == "boom-secret-detail");
     }
 
     /// <summary>The page as the user reads it: Blazor HTML-encodes non-ASCII text (ı → &amp;#x131;).</summary>

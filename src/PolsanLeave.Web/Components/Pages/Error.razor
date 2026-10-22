@@ -1,9 +1,12 @@
 @page "/Error"
 @attribute [AllowAnonymous]
 @using System.Diagnostics
+@using Microsoft.AspNetCore.Diagnostics
 @inject IStringLocalizer<Messages> L
+@inject ILogger<Error> Logger
 
-@* AC-38: generic Turkish message and a correlation id; no exception details, in any environment but Development. *@
+@* AC-38: generic Turkish message and a correlation id; no exception details, in any environment but Development.
+   The id is logged with the exception so support can find what the user reports (review 1, F-8). *@
 <PageTitle>@L["Error.Heading"] - @L["App.Title"]</PageTitle>
 
 <h1 class="text-danger">@L["Error.Heading"]</h1>
@@ -16,6 +19,12 @@
 
     private string? RequestId { get; set; }
 
-    protected override void OnInitialized() =>
+    protected override void OnInitialized()
+    {
         RequestId = Activity.Current?.TraceId.ToString() ?? HttpContext?.TraceIdentifier;
+        if (HttpContext?.Features.Get<IExceptionHandlerPathFeature>() is { } failure)
+        {
+            Logger.LogError(failure.Error, "Unhandled error {CorrelationId} on {Path}", RequestId, failure.Path);
+        }
+    }
 }
