@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test for scripts/zero-test-guard (spec 0002). POSIX sh, sed and grep only — no .NET, database or
 # browser. Run from the repository root: sh tests/scripts/zero-test-guard.test.sh (the guard-test
-# step in scripts/check.conf does). Exit 0 = all cases pass, exit 1 = at least one failed.
+# step in scripts/check.conf does). Exit 0 = all cases pass, exit 1 = one failed or none ran.
 set -u
 ESC=$(printf '\033')
 passed=0
