@@ -37,4 +37,5 @@ for step in test-unit test-integration test-e2e; do
 done
 
 echo "== zero-test-guard: $passed passed, $failed failed =="
-[ "$failed" -eq 0 ]
+# No case ran is not green either: the guard-test step has a zero-test guard of its own (review 1, I-3).
+[ "$failed" -eq 0 ] && [ "$passed" -gt 0 ]
