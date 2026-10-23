@@ -34,9 +34,26 @@ public class E2EApp : IAsyncLifetime
             .Addresses.First(a => a.StartsWith("http://", StringComparison.Ordinal));
 
         _playwright = await Playwright.CreateAsync();
-        // --lang fixes the browser's own locale (e.g. the date input's day/month/year order) on every OS; the
-        // context's Locale only sets what the page sees (plan 0001, D13).
-        Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Args = ["--lang=tr-TR"] });
+        // The browser's own locale (e.g. the date input's day/month/year order) is Turkish on every OS: Chromium
+        // reads --lang on Windows and macOS, the locale environment variables on Linux. The context's Locale only
+        // sets what the page sees (plan 0001, D13).
+        Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true,
+            Args = ["--lang=tr-TR"],
+            Env = TurkishLocaleEnvironment(),
+        });
+    }
+
+    /// <summary>The current environment with Turkish locale variables; Playwright's Env replaces it whole.</summary>
+    private static Dictionary<string, string> TurkishLocaleEnvironment()
+    {
+        var environment = Environment.GetEnvironmentVariables().Cast<System.Collections.DictionaryEntry>()
+            .ToDictionary(e => (string)e.Key, e => (string?)e.Value ?? "", StringComparer.Ordinal);
+        environment["LANGUAGE"] = "tr";
+        environment["LC_ALL"] = "tr_TR.UTF-8";
+        environment["LANG"] = "tr_TR.UTF-8";
+        return environment;
     }
 
     public async ValueTask DisposeAsync()
