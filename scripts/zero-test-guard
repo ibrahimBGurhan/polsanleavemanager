@@ -1,0 +1,7 @@
+#!/bin/sh
+# Zero-test guard (docs/testing.md, Two speeds rule 4) — project file, not part of the ANEW core.
+# Reads a test step's output on stdin; fails unless its summary reports at least one test, so a
+# selector that matches nothing can never pass as green. ANSI colour codes are stripped first: CI
+# output prefixes the summary lines with them (plan 0001, D11). Called by every test step in
+# scripts/check.conf; proven by tests/scripts/zero-test-guard.test.sh (spec 0002).
+sed 's/\x1b\[[0-9;]*m//g' | grep -Eq '^ *total: *[1-9]' || { echo "zero tests ran (docs/testing.md, Two speeds rule 4)" >&2; exit 1; }
