@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/PolsanLeave.Web/PolsanLeave.Web.csproj" />
+    <ProjectReference Include="../PolsanLeave.TestInfrastructure/PolsanLeave.TestInfrastructure.csproj" />
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+
+</Project>

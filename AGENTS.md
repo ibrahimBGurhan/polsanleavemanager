@@ -31,6 +31,7 @@
 | Testing rules, fast/full split, LocalDB, E2E | `docs/testing.md` |
 | Security: Entra ID, default-deny, KVKK | `docs/security.md` |
 | Git & branching, trivial-change policy | `docs/git.md` |
+| Local setup: LocalDB, Playwright, Entra app registration, seed, migrations | `docs/development.md` |
 | Decisions (ADRs) · roles (who may do what) | `docs/decisions/` · `docs/roles/` |
 | Specs & plans | `specs/active/` · `specs/plans/` · shipped → `specs/done/` |
 | Processes & gates · prompts & recovery ramps | `workflows/` · `prompts/` |

@@ -1,0 +1,29 @@
+@inherits LayoutComponentBase
+@inject IStringLocalizer<Messages> L
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized>
+                    <span class="me-3">@context.User.Identity?.Name</span>
+                    <a href="MicrosoftIdentity/Account/SignOut">@L["Nav.SignOut"]</a>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet role="alert">
+    @L["Error.Text"]
+    <a href="." class="reload">@L["Error.Reload"]</a>
+    <span class="dismiss" aria-hidden="true">🗙</span>
+</div>

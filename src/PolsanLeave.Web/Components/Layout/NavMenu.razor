@@ -1,0 +1,27 @@
+@inject IStringLocalizer<Messages> L
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">@L["App.Title"]</a>
+    </div>
+</div>
+
+<input type="checkbox" title="@L["Nav.Menu"]" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @L["Nav.Home"]
+            </NavLink>
+        </div>
+        @* Only users who may request leave see the form link (review 1, F-9). *@
+        <AuthorizeView Policy="@Policies.Employee">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="izin/yeni">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> @L["Nav.NewRequest"]
+                </NavLink>
+            </div>
+        </AuthorizeView>
+    </nav>
+</div>

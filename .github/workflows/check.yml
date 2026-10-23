@@ -35,8 +35,12 @@ jobs:
         with:
           global-json-file: global.json
         if: hashFiles('global.json') != ''
-      # Toolchain setup matching scripts/check.conf. The plan that adds E2E tests also adds the
-      # Playwright browser install step here.
+      # E2E (docs/testing.md): Playwright's Chromium, installed from the built test project.
+      - name: Playwright browser
+        if: hashFiles('global.json') != ''
+        run: |
+          dotnet build tests/PolsanLeave.E2E -c Release
+          pwsh tests/PolsanLeave.E2E/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
       # --fast is for the inner loop only; CI always runs the full contract (docs/testing.md).
       - name: Verification contract
         run: |

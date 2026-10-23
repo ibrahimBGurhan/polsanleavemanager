@@ -7,7 +7,11 @@
 - Agents never print secret values, even when debugging.
 - Geliştirme: `dotnet user-secrets`. Production: ortam değişkenleri veya Azure Key Vault.
 - Entra kimlik bilgisi: client secret yerine mümkünse sertifika veya managed identity.
-- Depoya yalnızca anahtar adlarını içeren `appsettings.Development.example.json` girer.
+- Sır içeren ayarlar için depoya yalnızca anahtar adlarını içeren bir `*.example.json` girer.
+- **İstisna:** sır içermeyen geliştirme ayarı (`appsettings.Development.json`: LocalDB + Integrated Security
+  bağlantı dizesi, log seviyeleri) depoda tutulur. Bu dosyaya parola, client secret, anahtar veya gerçek
+  sunucu adresi eklemek yasaktır; Entra tenant/client ID'leri de buraya değil user-secrets'a yazılır
+  (`docs/development.md`).
 
 ## Input & output
 - Tüm girdi sınırda doğrulanır: `DataAnnotations` (biçim) + domain doğrulaması (iş kuralı, `Result` hatası).
@@ -29,6 +33,11 @@
 - **Yetkilendirme servis katmanında** (modül `Contracts` servisleri) uygulanır, UI'da değil (IDOR önlemi).
   UI'daki gizleme yalnızca kullanım kolaylığıdır.
 - Yönetici yalnızca doğrudan raporlarının taleplerini görür ve karara bağlar (BR-6); bakiye düzeltmesi yalnızca `HrAdmin` (BR-8).
+- **Çalışan eşleştirme:** giriş kalıcı olarak Entra `oid` ile tanınır. `oid` ilk girişte UPN ile bağlanır; UPN için
+  Entra'nın `upn` optional claim'i kullanılır (`preferred_username` değişebilir ve yetkilendirme için
+  önerilmez; yalnızca yedek). Başka bir hesaba bağlı kayıt UPN ile ele geçirilemez.
+- **Varsayım:** `Employee` rolü yalnızca kurum içi **Member** kullanıcılara atanır; misafir (B2B) hesaplara
+  atanmaz. Bu varsayım değişirse ilk bağlama kuralı yeniden değerlendirilir (review 1, F-4).
 - Sahte test kimlik doğrulaması production derlemesine girmez (FD-6).
 
 ## Dependencies

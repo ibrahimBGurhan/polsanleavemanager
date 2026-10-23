@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- UI texts (docs/conventions.md, Language: UI metinleri Türkçe, .resx). Keys: Area.Name; error codes as-is. -->
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="App.Title" xml:space="preserve"><value>Polsan İzin</value></data>
+  <data name="Nav.Home" xml:space="preserve"><value>İzinlerim</value></data>
+  <data name="Nav.NewRequest" xml:space="preserve"><value>Yeni izin talebi</value></data>
+  <data name="Nav.SignOut" xml:space="preserve"><value>Çıkış yap</value></data>
+  <data name="Nav.Menu" xml:space="preserve"><value>Menü</value></data>
+
+  <data name="Home.Heading" xml:space="preserve"><value>İzinlerim</value></data>
+  <data name="Home.BalanceHeading" xml:space="preserve"><value>Yıllık izin bakiyem</value></data>
+  <data name="Home.MyRequests" xml:space="preserve"><value>Taleplerim</value></data>
+  <data name="Home.Empty" xml:space="preserve"><value>Henüz izin talebiniz yok.</value></data>
+  <data name="Home.Created" xml:space="preserve"><value>İzin talebiniz oluşturuldu ve yöneticinizin onayına gönderildi.</value></data>
+  <data name="Balance.Remaining" xml:space="preserve"><value>Kalan</value></data>
+  <data name="Balance.Pending" xml:space="preserve"><value>Bekleyen</value></data>
+  <data name="Balance.Available" xml:space="preserve"><value>Kullanılabilir</value></data>
+  <data name="Balance.Days" xml:space="preserve"><value>{0} gün</value></data>
+
+  <data name="Table.Start" xml:space="preserve"><value>Başlangıç</value></data>
+  <data name="Table.End" xml:space="preserve"><value>Bitiş</value></data>
+  <data name="Table.WorkingDays" xml:space="preserve"><value>İş günü</value></data>
+  <data name="Table.Status" xml:space="preserve"><value>Durum</value></data>
+  <data name="Table.CreatedAt" xml:space="preserve"><value>Oluşturulma</value></data>
+
+  <data name="Status.Pending" xml:space="preserve"><value>Beklemede</value></data>
+  <data name="Status.Approved" xml:space="preserve"><value>Onaylandı</value></data>
+  <data name="Status.Rejected" xml:space="preserve"><value>Reddedildi</value></data>
+  <data name="Status.Cancelled" xml:space="preserve"><value>İptal edildi</value></data>
+
+  <data name="Form.Heading" xml:space="preserve"><value>Yeni izin talebi</value></data>
+  <data name="Form.LeaveType" xml:space="preserve"><value>İzin türü: Yıllık izin</value></data>
+  <data name="Form.StartDate" xml:space="preserve"><value>Başlangıç tarihi</value></data>
+  <data name="Form.EndDate" xml:space="preserve"><value>Bitiş tarihi</value></data>
+  <data name="Form.Description" xml:space="preserve"><value>Açıklama (isteğe bağlı, en fazla 500 karakter)</value></data>
+  <data name="Form.Submit" xml:space="preserve"><value>Gönder</value></data>
+  <data name="Form.Submitting" xml:space="preserve"><value>Gönderiliyor…</value></data>
+  <data name="Form.Back" xml:space="preserve"><value>Vazgeç</value></data>
+  <data name="Form.Required" xml:space="preserve"><value>Bu alan zorunludur.</value></data>
+  <data name="Preview.Text" xml:space="preserve"><value>Bu talep {0} iş günü tutar. Talep sonrası kullanılabilir bakiyeniz: {1} gün.</value></data>
+
+  <data name="Leave.ProfileMissing" xml:space="preserve"><value>Profiliniz tanımlı değil, İK ile iletişime geçin.</value></data>
+  <data name="Leave.NoApprover" xml:space="preserve"><value>Onaylayıcı tanımlı değil, İK ile iletişime geçin.</value></data>
+  <data name="Leave.StartInPast" xml:space="preserve"><value>Başlangıç tarihi bugünden önce olamaz.</value></data>
+  <data name="Leave.StartTooFar" xml:space="preserve"><value>Başlangıç tarihi bugünden en fazla 365 gün sonra olabilir.</value></data>
+  <data name="Leave.EndBeforeStart" xml:space="preserve"><value>Bitiş tarihi başlangıç tarihinden önce olamaz.</value></data>
+  <data name="Leave.NoWorkingDays" xml:space="preserve"><value>Seçilen tarihlerde iş günü yok.</value></data>
+  <data name="Leave.InsufficientBalance" xml:space="preserve"><value>Talep edilen gün sayısı kullanılabilir bakiyenizi aşıyor.</value></data>
+  <data name="Leave.Overlap" xml:space="preserve"><value>Bu tarihler başka bir izin talebinizle çakışıyor.</value></data>
+  <data name="Leave.DescriptionTooLong" xml:space="preserve"><value>Açıklama en fazla 500 karakter olabilir.</value></data>
+  <data name="Calendar.NotDefined" xml:space="preserve"><value>Bu tarihler için tatil takvimi henüz tanımlı değil.</value></data>
+
+  <data name="Common.Loading" xml:space="preserve"><value>Yükleniyor…</value></data>
+  <data name="AccessDenied.Heading" xml:space="preserve"><value>Erişim yok</value></data>
+  <data name="AccessDenied.Text" xml:space="preserve"><value>Bu uygulamayı kullanma yetkiniz yok.</value></data>
+  <data name="NotFound.Heading" xml:space="preserve"><value>Sayfa bulunamadı</value></data>
+  <data name="NotFound.Text" xml:space="preserve"><value>Aradığınız sayfa bulunamadı.</value></data>
+  <data name="Error.Heading" xml:space="preserve"><value>Bir hata oluştu</value></data>
+  <data name="Error.Text" xml:space="preserve"><value>Beklenmeyen bir hata oluştu. Sorun devam ederse aşağıdaki kodu destek ekibine iletin.</value></data>
+  <data name="Error.CorrelationId" xml:space="preserve"><value>Hata kodu</value></data>
+  <data name="Error.Reload" xml:space="preserve"><value>Sayfayı yenile</value></data>
+  <data name="Reconnect.Attempt" xml:space="preserve"><value>Bağlantı yeniden kuruluyor…</value></data>
+  <data name="Reconnect.Failed" xml:space="preserve"><value>Bağlantı kurulamadı. Lütfen tekrar deneyin veya sayfayı yenileyin.</value></data>
+  <data name="Reconnect.Retry" xml:space="preserve"><value>Tekrar dene</value></data>
+  <data name="Reconnect.Resume" xml:space="preserve"><value>Devam et</value></data>
+</root>

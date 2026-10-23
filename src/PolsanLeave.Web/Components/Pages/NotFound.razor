@@ -1,0 +1,9 @@
+@page "/not-found"
+@attribute [AllowAnonymous]
+@layout MainLayout
+@inject IStringLocalizer<Messages> L
+
+<PageTitle>@L["NotFound.Heading"] - @L["App.Title"]</PageTitle>
+
+<h1>@L["NotFound.Heading"]</h1>
+<p>@L["NotFound.Text"]</p>

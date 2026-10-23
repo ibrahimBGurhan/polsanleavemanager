@@ -1,0 +1,12 @@
+@page "/izin/yeni"
+@attribute [Authorize(Policy = Policies.Employee)]
+@rendermode InteractiveServer
+@inject IStringLocalizer<Messages> L
+
+<PageTitle>@L["Form.Heading"] - @L["App.Title"]</PageTitle>
+
+<h1>@L["Form.Heading"]</h1>
+
+<CorrelatedErrorBoundary>
+    <LeaveRequestForm />
+</CorrelatedErrorBoundary>
