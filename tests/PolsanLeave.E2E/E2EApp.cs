@@ -34,7 +34,9 @@ public class E2EApp : IAsyncLifetime
             .Addresses.First(a => a.StartsWith("http://", StringComparison.Ordinal));
 
         _playwright = await Playwright.CreateAsync();
-        Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
+        // --lang fixes the browser's own locale (e.g. the date input's day/month/year order) on every OS; the
+        // context's Locale only sets what the page sees (plan 0001, D13).
+        Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Args = ["--lang=tr-TR"] });
     }
 
     public async ValueTask DisposeAsync()
