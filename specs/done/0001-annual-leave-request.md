@@ -1,6 +1,6 @@
 # Spec 0001 — Yıllık izin talebi oluşturma
 
-- Status: In progress
+- Status: Shipped
 - Mode: lite
 - Plan: `specs/plans/0001-plan.md`
 - Revisions: 2026-10-22 — R-08: ana sayfanın "yükleniyor" durumu çıkarıldı (streaming olmadan AC-38 güvencesi; onay: İbrahim Gürhan)
@@ -91,68 +91,68 @@ bakiyeleri ve resmî tatiller bu dilimde İK'nın sağladığı başlangıç ver
 
 ## Acceptance criteria
 Giriş ve yetki
-- [ ] AC-1 — Giriş yapmamış kullanıcı herhangi bir sayfaya gittiğinde Entra girişine yönlendirilir.
-- [ ] AC-2 — `Employee` rolü olmayan giriş yapmış kullanıcı "yetkiniz yok" sayfasını görür ve talep oluşturamaz.
-- [ ] AC-3 — Eşleşen çalışan kaydı olmayan kullanıcı ana sayfada "Profiliniz tanımlı değil" mesajını görür; talep oluşturamaz.
-- [ ] AC-4 — Bir çalışan başka bir çalışanın talebini hiçbir yoldan (liste, doğrudan adres/ID) göremez.
+- [x] AC-1 — Giriş yapmamış kullanıcı herhangi bir sayfaya gittiğinde Entra girişine yönlendirilir.
+- [x] AC-2 — `Employee` rolü olmayan giriş yapmış kullanıcı "yetkiniz yok" sayfasını görür ve talep oluşturamaz.
+- [x] AC-3 — Eşleşen çalışan kaydı olmayan kullanıcı ana sayfada "Profiliniz tanımlı değil" mesajını görür; talep oluşturamaz.
+- [x] AC-4 — Bir çalışan başka bir çalışanın talebini hiçbir yoldan (liste, doğrudan adres/ID) göremez.
 
 Bakiye (BR-1, BR-2, BR-9)
-- [ ] AC-5 — Açılış bakiyesi 10, açılıştan sonra yıldönümü olmamış, talebi olmayan çalışan: Kalan 10, Bekleyen 0, Kullanılabilir 10.
-- [ ] AC-6 — Açılıştan sonraki yıldönümünde 1. kıdem yılını tamamlayan (yaş 30) çalışana 14 gün eklenir.
-- [ ] AC-7 — Yıldönümünde tamamlanan kıdem 5 yıl (yaş 30) → 14 gün; 6 yıl → 20 gün.
-- [ ] AC-8 — Yıldönümünde tamamlanan kıdem 14 yıl (yaş 40) → 20 gün; 15 yıl → 26 gün.
-- [ ] AC-9 — Kıdem 3 yıl, yıldönümünde yaş 18 → 20 gün; yaş 19 → 14 gün.
-- [ ] AC-10 — Kıdem 3 yıl, yıldönümünde yaş 50 → 20 gün; yaş 49 → 14 gün.
-- [ ] AC-11 — Kıdem 20 yıl, yaş 55 → 26 gün (yaş alt sınırı daha yüksek hakkı düşürmez).
-- [ ] AC-12 — İşe giriş tarihinden bir yıl dolmamış çalışanın hak edişi 0'dır (açılış bakiyesi yoksa Kullanılabilir 0).
-- [ ] AC-13 — Açılış tarihinden önceki yıldönümleri için sistem hak ediş eklemez (yalnızca açılış bakiyesi sayılır).
-- [ ] AC-14 — 29 Şubat'ta işe girmiş çalışanın yıldönümü artık olmayan yıllarda 28 Şubat'tır.
-- [ ] AC-15 — Kalan bakiye, onaylanmış taleplerin iş günü toplamı kadar azalır; Kullanılabilir, bekleyen taleplerin iş günü toplamı kadar daha azdır.
-- [ ] AC-16 — Önceki yıllardan kullanılmayan günler Kalan'da korunur (devir sınırsız).
+- [x] AC-5 — Açılış bakiyesi 10, açılıştan sonra yıldönümü olmamış, talebi olmayan çalışan: Kalan 10, Bekleyen 0, Kullanılabilir 10.
+- [x] AC-6 — Açılıştan sonraki yıldönümünde 1. kıdem yılını tamamlayan (yaş 30) çalışana 14 gün eklenir.
+- [x] AC-7 — Yıldönümünde tamamlanan kıdem 5 yıl (yaş 30) → 14 gün; 6 yıl → 20 gün.
+- [x] AC-8 — Yıldönümünde tamamlanan kıdem 14 yıl (yaş 40) → 20 gün; 15 yıl → 26 gün.
+- [x] AC-9 — Kıdem 3 yıl, yıldönümünde yaş 18 → 20 gün; yaş 19 → 14 gün.
+- [x] AC-10 — Kıdem 3 yıl, yıldönümünde yaş 50 → 20 gün; yaş 49 → 14 gün.
+- [x] AC-11 — Kıdem 20 yıl, yaş 55 → 26 gün (yaş alt sınırı daha yüksek hakkı düşürmez).
+- [x] AC-12 — İşe giriş tarihinden bir yıl dolmamış çalışanın hak edişi 0'dır (açılış bakiyesi yoksa Kullanılabilir 0).
+- [x] AC-13 — Açılış tarihinden önceki yıldönümleri için sistem hak ediş eklemez (yalnızca açılış bakiyesi sayılır).
+- [x] AC-14 — 29 Şubat'ta işe girmiş çalışanın yıldönümü artık olmayan yıllarda 28 Şubat'tır.
+- [x] AC-15 — Kalan bakiye, onaylanmış taleplerin iş günü toplamı kadar azalır; Kullanılabilir, bekleyen taleplerin iş günü toplamı kadar daha azdır.
+- [x] AC-16 — Önceki yıllardan kullanılmayan günler Kalan'da korunur (devir sınırsız).
 
 İş günü hesabı (BR-3)
-- [ ] AC-17 — Pazartesi–Cuma, tatilsiz bir hafta = 5 iş günü.
-- [ ] AC-18 — Cuma–Pazartesi aralığı = 2 iş günü (hafta sonu sayılmaz).
-- [ ] AC-19 — Resmî tatil içeren aralıkta tatil günü sayılmaz (ör. 29 Ekim 2026 Perşembe içeren 26–30 Ekim 2026 = 4 iş günü).
-- [ ] AC-20 — Arife günü (ör. Kurban Bayramı arifesi) iş günü olarak sayılır.
-- [ ] AC-21 — Başlangıç = bitiş = bir iş günü → 1 iş günü.
+- [x] AC-17 — Pazartesi–Cuma, tatilsiz bir hafta = 5 iş günü.
+- [x] AC-18 — Cuma–Pazartesi aralığı = 2 iş günü (hafta sonu sayılmaz).
+- [x] AC-19 — Resmî tatil içeren aralıkta tatil günü sayılmaz (ör. 29 Ekim 2026 Perşembe içeren 26–30 Ekim 2026 = 4 iş günü).
+- [x] AC-20 — Arife günü (ör. Kurban Bayramı arifesi) iş günü olarak sayılır.
+- [x] AC-21 — Başlangıç = bitiş = bir iş günü → 1 iş günü.
 
 Talep oluşturma ve doğrulama (R-5, R-6)
-- [ ] AC-22 — Geçerli bir talep `Pending` durumunda, çalışanın doğrudan yöneticisine atanmış olarak kaydedilir; çalışan başarı mesajı görür ve talep "Taleplerim"in en üstünde "Beklemede" olarak görünür.
-- [ ] AC-23 — Başlangıç bugün olan talep kabul edilir; dün olan reddedilir.
-- [ ] AC-24 — Bitiş başlangıçtan önceyse reddedilir.
-- [ ] AC-25 — Başlangıç bugün + 365 gün ise kabul edilir; bugün + 366 gün ise reddedilir.
-- [ ] AC-26 — Yalnızca hafta sonu ve/veya resmî tatil içeren aralık reddedilir.
-- [ ] AC-27 — Talep edilen iş günü = Kullanılabilir bakiye ise kabul edilir; Kullanılabilir + 1 ise reddedilir.
-- [ ] AC-28 — Bekleyen bir talep, yeni talebin bakiye kontrolünde düşülür (Kalan 10, Bekleyen 6 iken 5 günlük talep reddedilir).
-- [ ] AC-29 — `Pending` veya `Approved` bir talebiyle tek gün bile çakışan talep reddedilir; `Rejected` veya `Cancelled` taleple çakışma engel değildir.
-- [ ] AC-30 — Doğrudan yöneticisi tanımlı olmayan çalışan formda "Onaylayıcı tanımlı değil" mesajını görür; talep oluşturamaz.
-- [ ] AC-31 — 500 karakterlik açıklama kabul edilir; 501 karakterlik reddedilir; boş açıklama kabul edilir.
-- [ ] AC-32 — Reddedilen gönderimde form girilen değerleri korur ve nedeni ilgili alanın yanında Türkçe gösterir; hiçbir talep kaydı oluşmaz.
-- [ ] AC-33 — "Gönder"e art arda iki kez basmak tek talep oluşturur.
-- [ ] AC-40 — Tatil takvimi tanımlı olmayan bir yıla (ör. 2028) uzanan talep "Bu tarihler için tatil takvimi henüz tanımlı değil" nedeniyle reddedilir.
-- [ ] AC-41 — Aynı çalışanın birbiriyle çakışan (veya birlikte kullanılabilir bakiyeyi aşan) iki talebi eşzamanlı gönderildiğinde en fazla biri kabul edilir.
-- [ ] AC-34 — Bakiye değişikliği yalnızca talep veya gerekçeli düzeltme kaynaklıdır; her bakiye hareketinin kaynağı izlenebilir (denetim izi değişmezi).
+- [x] AC-22 — Geçerli bir talep `Pending` durumunda, çalışanın doğrudan yöneticisine atanmış olarak kaydedilir; çalışan başarı mesajı görür ve talep "Taleplerim"in en üstünde "Beklemede" olarak görünür.
+- [x] AC-23 — Başlangıç bugün olan talep kabul edilir; dün olan reddedilir.
+- [x] AC-24 — Bitiş başlangıçtan önceyse reddedilir.
+- [x] AC-25 — Başlangıç bugün + 365 gün ise kabul edilir; bugün + 366 gün ise reddedilir.
+- [x] AC-26 — Yalnızca hafta sonu ve/veya resmî tatil içeren aralık reddedilir.
+- [x] AC-27 — Talep edilen iş günü = Kullanılabilir bakiye ise kabul edilir; Kullanılabilir + 1 ise reddedilir.
+- [x] AC-28 — Bekleyen bir talep, yeni talebin bakiye kontrolünde düşülür (Kalan 10, Bekleyen 6 iken 5 günlük talep reddedilir).
+- [x] AC-29 — `Pending` veya `Approved` bir talebiyle tek gün bile çakışan talep reddedilir; `Rejected` veya `Cancelled` taleple çakışma engel değildir.
+- [x] AC-30 — Doğrudan yöneticisi tanımlı olmayan çalışan formda "Onaylayıcı tanımlı değil" mesajını görür; talep oluşturamaz.
+- [x] AC-31 — 500 karakterlik açıklama kabul edilir; 501 karakterlik reddedilir; boş açıklama kabul edilir.
+- [x] AC-32 — Reddedilen gönderimde form girilen değerleri korur ve nedeni ilgili alanın yanında Türkçe gösterir; hiçbir talep kaydı oluşmaz.
+- [x] AC-33 — "Gönder"e art arda iki kez basmak tek talep oluşturur.
+- [x] AC-40 — Tatil takvimi tanımlı olmayan bir yıla (ör. 2028) uzanan talep "Bu tarihler için tatil takvimi henüz tanımlı değil" nedeniyle reddedilir.
+- [x] AC-41 — Aynı çalışanın birbiriyle çakışan (veya birlikte kullanılabilir bakiyeyi aşan) iki talebi eşzamanlı gönderildiğinde en fazla biri kabul edilir.
+- [x] AC-34 — Bakiye değişikliği yalnızca talep veya gerekçeli düzeltme kaynaklıdır; her bakiye hareketinin kaynağı izlenebilir (denetim izi değişmezi).
 
 Ekranlar ve durumlar
-- [ ] AC-35 — Tarihler seçilince önizleme iş günü sayısını ve talep sonrası kullanılabilir bakiyeyi gösterir; aralık geçersizse (ör. bitiş başlangıçtan önce) önizleme yerine ilgili doğrulama mesajı görünür.
-- [ ] AC-36 — Hiç talebi olmayan çalışan "Henüz izin talebiniz yok" mesajını görür.
-- [ ] AC-37 — "Taleplerim" başlangıç, bitiş, iş günü, Türkçe durum etiketi ve oluşturulma zamanını gösterir; en yeni en üstte.
-- [ ] AC-38 — Beklenmeyen bir hatada kullanıcı genel Türkçe mesaj ve korelasyon ID görür; stack trace veya teknik detay görmez.
-- [ ] AC-39 — Form yalnızca klavyeyle doldurulup gönderilebilir; tüm alanların erişilebilir etiketi vardır; hata mesajı alana bağlıdır.
+- [x] AC-35 — Tarihler seçilince önizleme iş günü sayısını ve talep sonrası kullanılabilir bakiyeyi gösterir; aralık geçersizse (ör. bitiş başlangıçtan önce) önizleme yerine ilgili doğrulama mesajı görünür.
+- [x] AC-36 — Hiç talebi olmayan çalışan "Henüz izin talebiniz yok" mesajını görür.
+- [x] AC-37 — "Taleplerim" başlangıç, bitiş, iş günü, Türkçe durum etiketi ve oluşturulma zamanını gösterir; en yeni en üstte.
+- [x] AC-38 — Beklenmeyen bir hatada kullanıcı genel Türkçe mesaj ve korelasyon ID görür; stack trace veya teknik detay görmez.
+- [x] AC-39 — Form yalnızca klavyeyle doldurulup gönderilebilir; tüm alanların erişilebilir etiketi vardır; hata mesajı alana bağlıdır.
 
 ## Definition of Done
-- [ ] Every acceptance criterion mapped to proof (test or reproducible observation)
-- [ ] `scripts/check` green
-- [ ] Independent review done; real findings fixed, noise rejected with written rationale
-- [ ] Docs / ADRs updated if behavior or architecture changed
-- [ ] Spec moved to `specs/done/` (it becomes immutable there)
+- [x] Every acceptance criterion mapped to proof (test or reproducible observation)
+- [x] `scripts/check` green
+- [x] Independent review done; real findings fixed, noise rejected with written rationale
+- [x] Docs / ADRs updated if behavior or architecture changed
+- [x] Spec moved to `specs/done/` (it becomes immutable there)
 
 ## Scorecard (fill at ship — honest numbers make the process improvable)
 | Metric | Value |
 |---|---|
-| Spec revisions | |
-| Fix rounds | |
-| Review findings: real / noise | |
-| Regressions introduced | |
-| Bugs escaped to production | |
+| Spec revisions | 1 (R-08, 2026-10-22) |
+| Fix rounds | 4 (review 1 · review 2 · verify 1 · review 3) |
+| Review findings: real / noise | 17 / 4 (review 1: 9/0 · review 2: 2/2 · verify 1: 3/2 · review 3: 3/0) |
+| Regressions introduced | 0 |
+| Bugs escaped to production | — (merge anında ölçülemez) |
