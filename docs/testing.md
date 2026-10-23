@@ -23,6 +23,7 @@
 | Architecture | FD-1…FD-6 | yok | `--fast` (`test-unit`) |
 | Integration | EF Core eşlemeleri, sorgular, modüller arası akış, gerçek SQL Server | `[Trait("Category","Integration")]` | full (`test-integration`) |
 | E2E | Kritik UI akışları: talep oluştur, onayla, reddet, iptal et | `[Trait("Category","E2E")]` | full (`test-e2e`) |
+| Araç | Proje araçlarının davranışı, ör. `scripts/zero-test-guard` (POSIX `sh`) | dosya adı `tests/scripts/*.test.sh` (glob seçici) | `--fast` (`guard-test`) |
 
   Fast filtresi `Category!=Integration&Category!=E2E`; full-only adımlar `Category=Integration` ve
   `Category=E2E` — birleşimleri her testi kapsar. Yeni bir kategori eklemek check.conf'u da değiştirir.
