@@ -34,9 +34,9 @@ public class E2EApp : IAsyncLifetime
             .Addresses.First(a => a.StartsWith("http://", StringComparison.Ordinal));
 
         _playwright = await Playwright.CreateAsync();
-        // The browser's own locale (e.g. the date input's day/month/year order) is Turkish on every OS: Chromium
-        // reads --lang on Windows and macOS, the locale environment variables on Linux. The context's Locale only
-        // sets what the page sees (plan 0001, D13).
+        // The browser's own locale (e.g. the date input's day/month/year order) is Turkish on Windows and Linux:
+        // Chromium reads --lang on Windows and the locale environment variables on Linux (macOS uses its own
+        // language preference). The context's Locale only sets what the page sees (plan 0001, D13).
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,
